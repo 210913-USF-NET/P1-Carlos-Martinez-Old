@@ -1,4 +1,6 @@
 ﻿using System;
+using BL;
+using DL;
 
 namespace UI
 {
@@ -6,7 +8,7 @@ namespace UI
     {
         static void Main(string[] args)
         {
-            new MainMenu().Start();
+            new MainMenu(new BLogic(new ExampleRepo())).Start();
         }
     }
 }

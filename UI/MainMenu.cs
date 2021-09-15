@@ -7,13 +7,18 @@ namespace UI
 {
     public class MainMenu : IMenu
     {
+        private IBL _bl;
+        public MainMenu (IBL bl)
+        {
+            _bl = bl;
+        }
         public void Start()
         {
             bool exit = false;
             string input = "";
             do
             {
-                Console.WriteLine("\nWelcome to the Adventurer's Shop");
+                Console.WriteLine("\nWelcome to the Emporium!");
                 Console.WriteLine("Have you shopped with us before?");
                 Console.Write("0- Yes\n1- No\nx- Exit\nInput: ");
                 input = Console.ReadLine();

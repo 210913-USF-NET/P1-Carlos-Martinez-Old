@@ -5,7 +5,6 @@ namespace DL
 {
     public interface IRepo
     {
-        Customer AddCustomer(Customer custo);
-        List<Customer> GetAllCustomers();
+        public List<StoreFront> GetAllStoreFronts();
     }
 }

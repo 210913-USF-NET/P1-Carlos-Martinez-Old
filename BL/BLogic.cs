@@ -14,14 +14,9 @@ namespace BL
             _repo = repo;
         }
 
-        public List<Customer> GetAllCustomers()
+        public List<StoreFront> GetAllStoreFronts()
         {
-            return _repo.GetAllCustomers();
-        }
-
-        public Customer AddCustomer(Customer custo)
-        {
-            return _repo.AddCustomer(custo);
+            return _repo.GetAllStoreFronts();
         }
     }
 }

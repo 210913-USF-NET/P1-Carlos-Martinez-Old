@@ -17,11 +17,5 @@ namespace Models
         // properties
         public string Name { get; set; }
         public List<Orders> Orders { get; set; }
-
-        // output string
-        public override string ToString()
-        {
-            return $"Name: {this.Name}";
-        }
     }
 }
