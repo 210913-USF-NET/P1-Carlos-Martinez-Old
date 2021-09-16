@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Models;
 using BL;
 using DL;
@@ -20,7 +21,7 @@ namespace UI
             {
                 Console.WriteLine("\nWelcome to the Emporium!");
                 Console.WriteLine("Have you shopped with us before?");
-                Console.Write("0- Yes\n1- No\nx- Exit\nInput: ");
+                Console.Write("0- Yes\n1- No\n2- Management\nx- Exit\nInput: ");
                 input = Console.ReadLine();
 
                 switch (input)
@@ -32,7 +33,13 @@ namespace UI
 
                     case "1":
                         // Send them to the new customer Method, then send them to the Store Menu. 
+                        Console.WriteLine("New customer, create them");
                         CreateCustomer();
+                        break;
+
+                    case "2":
+                        // Send them to a management menu
+                        Console.WriteLine("Management");
                         break;
                     
                     case "x":
@@ -53,6 +60,7 @@ namespace UI
             Console.WriteLine("Thank you.");
 
             Customer newCusto = new Customer(name);
+            _bl.AddCustomer(newCusto);
         }
     }
 }

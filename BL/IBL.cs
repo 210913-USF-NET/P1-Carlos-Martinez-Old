@@ -6,6 +6,9 @@ namespace BL
 {
     public interface IBL
     {
-        public List<StoreFront> GetAllStoreFronts();
+        StoreFront AddStoreFront(StoreFront store);
+        List<StoreFront> GetAllStoreFronts();
+        Customer AddCustomer(Customer cust);
+        List<Customer> GetAllCustomers();
     }
 }
