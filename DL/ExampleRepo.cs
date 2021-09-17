@@ -64,5 +64,24 @@ namespace DL
             jsonString = File.ReadAllText(filePath);
             return JsonSerializer.Deserialize<List<Customer>>(jsonString);
         }
+
+        public Customer GetCustomer(string name)
+        {
+            List<Customer> allCustomers = GetAllCustomers();
+            if (allCustomers.Count() == 0)
+            {
+                Console.WriteLine("No customers found.");
+                return null;
+            }
+
+            foreach (Customer custo in allCustomers)
+            {
+                if (custo.Name.Equals(name))
+                {
+                    return custo;
+                }
+            }
+            return null;
+        }
     }
 }

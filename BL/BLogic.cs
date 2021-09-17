@@ -33,5 +33,10 @@ namespace BL
         {
             return _repo.GetAllCustomers();
         }
+
+        public Customer GetCustomer(string name)
+        {
+            return _repo.GetCustomer(name);            
+        }
     }
 }

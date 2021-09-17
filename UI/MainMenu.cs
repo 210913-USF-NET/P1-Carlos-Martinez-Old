@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Models;
 using BL;
 using DL;
@@ -9,42 +8,43 @@ namespace UI
     public class MainMenu : IMenu
     {
         private IBL _bl;
-        public MainMenu (IBL bl)
+
+        public MainMenu(IBL bl)
         {
             _bl = bl;
         }
         public void Start()
         {
             bool exit = false;
-            string input = "";
             do
             {
                 Console.WriteLine("\nWelcome to the Emporium!");
                 Console.WriteLine("Have you shopped with us before?");
-                Console.Write("0- Yes\n1- No\n2- Management\nx- Exit\nInput: ");
-                input = Console.ReadLine();
+                Console.WriteLine("0- Yes");
+                Console.WriteLine("1- No");
+                Console.WriteLine("2- Management");
+                Console.WriteLine("x- Exit");
+                Console.Write("Input: ");
 
-                switch (input)
+                switch (Console.ReadLine())
                 {
                     case "0":
                         // Request their name. Send them to the Store Menu. 
-                        Console.WriteLine("Old customer, sign in");
+                        MenuFactory.GetMenu("store").Start();
                         break;
 
                     case "1":
                         // Send them to the new customer Method, then send them to the Store Menu. 
-                        Console.WriteLine("New customer, create them");
                         CreateCustomer();
                         break;
 
                     case "2":
                         // Send them to a management menu
-                        Console.WriteLine("Management");
+                        MenuFactory.GetMenu("manager").Start();
                         break;
                     
                     case "x":
                         // Leave
-                        Console.WriteLine("Exit!");
                         exit = true;
                         break;
                 }
@@ -53,6 +53,12 @@ namespace UI
 
         public void CreateCustomer()
         {
+            // Do I want to move this elsewhere? Maybe just call _bl.CreateCustomer?
+            // Except this information needs to ask things of the customer.
+            // Need to gather information in the UI layer before sending it over. 
+            // What do I want to gather?
+            // Name, obviously. 
+            // Age? No. Money? I could. Username? Eh. 
             Console.WriteLine("Creating new customer...");
             Console.Write("What is your name? ");
             string name = Console.ReadLine();
