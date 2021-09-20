@@ -1,13 +1,14 @@
 using BL;
+using Models;
 using System;
 
 namespace UI
 {
-    public class manageProductsMenu : IMenu
+    public class customerMenu : IMenu
     {
         private IBL _bl;
 
-        public manageProductsMenu(IBL bl)
+        public customerMenu(IBL bl)
         {
             _bl = bl;
         }

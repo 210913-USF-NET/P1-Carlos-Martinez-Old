@@ -3,11 +3,11 @@ using System;
 
 namespace UI
 {
-    public class manageProductsMenu : IMenu
+    public class manageCustomerMenu : IMenu
     {
         private IBL _bl;
 
-        public manageProductsMenu(IBL bl)
+        public manageCustomerMenu(IBL bl)
         {
             _bl = bl;
         }

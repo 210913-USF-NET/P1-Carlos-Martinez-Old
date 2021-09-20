@@ -13,9 +13,11 @@ namespace UI
                 case "main":
                     return new MainMenu(new BLogic(new ExampleRepo()));
                 case "store":
-                    return new StoreMenu(new BLogic(new ExampleRepo()));
+                    return new storeMenu(new BLogic(new ExampleRepo()));
+                case "customer":
+                    return new customerMenu(new BLogic(new ExampleRepo()));
                 case "manager":
-                    return new ManagerMenu(new BLogic(new ExampleRepo()));
+                    return new managerMenu(new BLogic(new ExampleRepo()));
                 case "manageProducts":
                     return new manageProductsMenu(new BLogic(new ExampleRepo()));
                 case "manageStores":

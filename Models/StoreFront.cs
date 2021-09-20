@@ -5,17 +5,19 @@ namespace Models
 {
     public class StoreFront
     {
-        public StoreFront() {}
+        public StoreFront() 
+        {
+            Inventories = new List<Inventory>();
+        }
         
         // constructor w/ Name
-        public StoreFront(string name)
+        public StoreFront(string name) : this()
         {
             this.Name = name;
         }
 
         // properties
         public string Name { get; set; }
-        public string Address { get; set; }
         public List<Inventory> Inventories { get; set; }
     }
 }
