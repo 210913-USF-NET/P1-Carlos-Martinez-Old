@@ -18,15 +18,6 @@ namespace UI
             do
             {
                 Console.WriteLine("Welcome to the manager menu.");
-                Console.Write("Please enter your password: ");
-                if (Console.ReadLine() != "88")
-                {
-                    Console.WriteLine("Validating... incorrect. Returning to main menu...");
-                    return;
-                }
-
-                Console.WriteLine("Validating... thank you.");
-
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0- Manage Products");
                 Console.WriteLine("1- Manage Stores");

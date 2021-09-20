@@ -12,6 +12,12 @@ namespace Models
             this.Name = name;
         }
 
+        public Product(string name, decimal Price, string Description) : this(name)
+        {
+            this.Price = Price;
+            this.Description = Description;
+        }
+
         // properties
         public string Name { get; set; }
         public Type type { get; set; }

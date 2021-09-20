@@ -14,6 +14,7 @@ namespace BL
             _repo = repo;
         }
 
+        // Stores [Add Store, Get Stores]
         public StoreFront AddStoreFront(StoreFront store)
         {
             return _repo.AddStoreFront(store);
@@ -22,6 +23,17 @@ namespace BL
         public List<StoreFront> GetAllStoreFronts()
         {
             return _repo.GetAllStoreFronts();
+        }
+
+        
+        // Products [Add Product, Get Products]
+        public Product AddProduct(Product product)
+        {
+            return _repo.AddProduct(product);
+        }
+        public List<Product> GetAllProducts()
+        {
+            return _repo.GetAllProducts();
         }
 
         public Customer AddCustomer(Customer cust)

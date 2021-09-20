@@ -8,7 +8,7 @@ namespace UI
     {
         public static IMenu GetMenu(string menuString)
         {
-            switch (menuString.ToLower())
+            switch (menuString)
             {
                 case "main":
                     return new MainMenu(new BLogic(new ExampleRepo()));

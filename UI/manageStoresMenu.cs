@@ -1,5 +1,7 @@
 using BL;
+using Models;
 using System;
+using System.Collections.Generic;
 
 namespace UI
 {
@@ -15,30 +17,65 @@ namespace UI
         public void Start()
         {
             bool exit = false;
+            StoreFront activeStore = null;
             do
             {
-                Console.WriteLine("\nWelcome to my shop!");
-                Console.WriteLine("What would you like to do?");
-                Console.WriteLine("0- Add Product to Shopping Cart");
+                Console.WriteLine("\nManaging stores...");
+                if (activeStore == null) Console.WriteLine("No active store, please select a store first.");
+                else Console.WriteLine($"Current active store: {activeStore.Name}"); // should display active store by name. 
+                Console.WriteLine("0- Add Store");
                 Console.WriteLine("1- Change Store");
-                Console.WriteLine("2- Check Shopping Cart");
+                Console.WriteLine("2- See Inventory");
+                Console.WriteLine("3- Add Inventory");
                 Console.WriteLine("x- Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
                 {
                     case "0": 
-                        // Add Product to Order
+                        // Add Store
+                        Console.WriteLine("Adding a new store. What is the store's name?");
+                        string name = Console.ReadLine();
+                        activeStore = _bl.AddStoreFront(new StoreFront(name));
+                        Console.WriteLine("Setting current active store to new store.");
                         break; 
+
                     case "1": 
                         // Change Store
+                        Console.WriteLine("Searching for all stores...");
+                        List<StoreFront> allRestos = _bl.GetAllStoreFronts();
+                        if (allRestos.Count == 0)
+                        {
+                            Console.WriteLine("There are no stores.");
+                            break;
+                        }
+                        for (int i = 0; i < allRestos.Count; i++) 
+                        {
+                            Console.WriteLine($"[{i}] {allRestos[i].Name}");
+                        }
+                        Console.WriteLine("Which store would you like to switch to?");
+                        string input = Console.ReadLine();
+                        int parsedInput;
+
+                        bool parseSuccess = int.TryParse(input, out parsedInput);
+                        if (parseSuccess && parsedInput >= 0 && parsedInput < allRestos.Count)
+                        {
+                            activeStore = allRestos[parsedInput];
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Returning to store manager menu.");
+                            break;
+                        }
                         break; 
+
                     case "2": 
-                        // Check Order
-                          // Checkout, Remove Product from Order
-                          // Should I make a switch inside the switch or send it over to a new menu?
+                        // See Inventory
                         break; 
                     case "3": 
+                        // Add Inventory
+                        break; 
+                    case "x": 
                         exit = true;
                         break;
                 }

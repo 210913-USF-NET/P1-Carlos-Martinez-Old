@@ -40,6 +40,32 @@ namespace DL
             return JsonSerializer.Deserialize<List<StoreFront>>(jsonString);
         }
 
+    
+        // Products [Add Product, Get Products]
+        public Product AddProduct(Product product)
+        {
+            filePath = "../DL/Products.json";
+            
+            // get all products
+            List<Product> allProducts = GetAllProducts();
+
+            allProducts.Add(product);
+
+            // serialize
+            jsonString = JsonSerializer.Serialize(allProducts);
+
+            // Write to file
+            File.WriteAllText(filePath, jsonString);
+
+            return product;
+        }
+        public List<Product> GetAllProducts()
+        {
+            filePath = "../DL/Products.json";
+            jsonString = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<List<Product>>(jsonString);
+        }
+
         public Customer AddCustomer(Customer cust)
         {
             filePath = "../DL/Customers.json";

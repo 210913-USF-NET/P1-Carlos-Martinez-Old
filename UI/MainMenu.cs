@@ -39,6 +39,13 @@ namespace UI
 
                     case "2":
                         // Send them to a management menu
+                        Console.Write("Please enter your password: ");
+                        if (Console.ReadLine() != "88")
+                        {
+                            Console.WriteLine("Validating... incorrect. Returning to main menu...");
+                            break;
+                        }
+                        Console.WriteLine("Validating... thank you.");
                         MenuFactory.GetMenu("manager").Start();
                         break;
                     
