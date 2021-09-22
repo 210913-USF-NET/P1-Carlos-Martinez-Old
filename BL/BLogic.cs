@@ -46,9 +46,13 @@ namespace BL
             return _repo.GetAllCustomers();
         }
 
-        public Customer GetCustomer(string name)
+        public Customer GetCustomer(int ID)
         {
-            return _repo.GetCustomer(name);            
+            return _repo.GetCustomer(ID);            
+        }
+        public Customer UpdateCustomer(Customer cust)
+        {
+            return _repo.UpdateCustomer(cust);
         }
     }
 }

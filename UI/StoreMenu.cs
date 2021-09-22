@@ -1,6 +1,7 @@
 using BL;
 using Models;
 using System;
+using System.Collections.Generic;  
 
 namespace UI
 {
@@ -15,15 +16,64 @@ namespace UI
 
         public void Start()
         {
-            Console.WriteLine("\nEnter your name: ");
-            Customer custo = _bl.GetCustomer(Console.ReadLine());
+            Console.WriteLine("\nEnter your unique ID: ");
+            commonMethods _CMinstance = new commonMethods();
+            int input = _CMinstance.convertString(Console.ReadLine(), 0);
+            if (input == -1)
+            {
+                Console.WriteLine("ID not found. Returning to main menu.");
+                return;
+            }
+            Customer custo = _bl.GetCustomer(input);
             if (custo == null)
             {
-                Console.WriteLine("Name not found. Returning to main menu.");
+                Console.WriteLine("ID not found. Returning to main menu.");
                 return;
             }
 
             // Check default store. 
+            StoreFront activeStore = new StoreFront();
+            List<StoreFront> allRestos = _bl.GetAllStoreFronts();
+            if (allRestos.Count == 0)
+            {
+                Console.WriteLine("There are no stores.");
+                Console.WriteLine("Please contact management and report this issue.");
+                return;
+            }
+            // What if: Null default store? Ask where they want to go.
+            // Else, take them there already. 
+            
+            if(custo.StoreFrontID != -1)
+            {
+                // They have a default store. 
+                activeStore = allRestos[custo.StoreFrontID];
+            }
+            else
+            {
+                manageStoresMenu _MSMinstance = new manageStoresMenu(_bl);
+                activeStore = _MSMinstance.selectStore();
+                // for (int i = 0; i < allRestos.Count; i++) 
+                // {
+                //     Console.WriteLine($"[{i}] {allRestos[i].Name}");
+                // }
+                // Console.Write("Which store would you like to switch to? ");
+                // string input = Console.ReadLine();
+                // int parsedInput;
+
+                // bool parseSuccess = int.TryParse(input, out parsedInput);
+                // if (parseSuccess && parsedInput >= 0 && parsedInput < allRestos.Count)
+                // {
+                //     activeStore = allRestos[parsedInput];
+                // }
+                // else
+                // {
+                //     Console.WriteLine("Invalid input. Returning to store manager menu.");
+                //     break;
+                // }
+                // break; 
+                // // They do not. Figure out where they want to go.
+                // Console.Write("Which store would you like to go to? ");
+            }
 
             bool exit = false;
             do

@@ -2,6 +2,7 @@ using System;
 using Models;
 using BL;
 using DL;
+using System.Collections.Generic;
 
 namespace UI
 {
@@ -47,6 +48,11 @@ namespace UI
                         }
                         Console.WriteLine("Validating... thank you.");
                         MenuFactory.GetMenu("manager").Start();
+                        break;
+                    
+                    case "3":
+                        // Test
+                        MenuFactory.GetMenu("customer").Start();
                         break;
                     
                     case "x":

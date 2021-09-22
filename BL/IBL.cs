@@ -13,8 +13,10 @@ namespace BL
         Product AddProduct(Product product);
         List<Product> GetAllProducts();
         
+        // Customers [Add Customer, Get Customers/Customer, Update Customer]
         Customer AddCustomer(Customer cust);
         List<Customer> GetAllCustomers();
-        Customer GetCustomer(string name);
+        Customer GetCustomer(int ID);
+        Customer UpdateCustomer(Customer cust);
     }
 }

@@ -43,31 +43,18 @@ namespace UI
                     case "1": 
                         // Change Store
                         Console.WriteLine("Searching for all stores...");
-                        List<StoreFront> allRestos = _bl.GetAllStoreFronts();
-                        if (allRestos.Count == 0)
+
+                        activeStore = selectStore();
+                        if (activeStore is null)
                         {
                             Console.WriteLine("There are no stores.");
                             break;
                         }
-                        for (int i = 0; i < allRestos.Count; i++) 
-                        {
-                            Console.WriteLine($"[{i}] {allRestos[i].Name}");
-                        }
-                        Console.WriteLine("Which store would you like to switch to?");
-                        string input = Console.ReadLine();
-                        int parsedInput;
-
-                        bool parseSuccess = int.TryParse(input, out parsedInput);
-                        if (parseSuccess && parsedInput >= 0 && parsedInput < allRestos.Count)
-                        {
-                            activeStore = allRestos[parsedInput];
-                        }
                         else
                         {
-                            Console.WriteLine("Invalid input. Returning to store manager menu.");
+                            Console.WriteLine($"Store changed to {activeStore.Name}");
                             break;
                         }
-                        break; 
 
                     case "2": 
                         // See Inventory
@@ -80,6 +67,34 @@ namespace UI
                         break;
                 }
             } while(!exit);
+        }
+        public StoreFront selectStore()
+        {
+            List<StoreFront> allRestos = _bl.GetAllStoreFronts();
+            if (allRestos.Count == 0)
+            {
+                return null;
+            }
+
+            selectStore:
+            for (int i = 0; i < allRestos.Count; i++) 
+            {
+                Console.WriteLine($"[{i}] {allRestos[i].Name}");
+            }
+            Console.Write("Which store would you like to switch to? ");
+            string input = Console.ReadLine();
+            int parsedInput;
+
+            bool parseSuccess = int.TryParse(input, out parsedInput);
+            if (parseSuccess && parsedInput >= 0 && parsedInput < allRestos.Count)
+            {
+                return allRestos[parsedInput];
+            }
+            else
+            {
+                Console.WriteLine("Invalid input.");
+                goto selectStore;
+            }
         }
     }
 }

@@ -12,16 +12,17 @@ namespace Models
             this.Name = name;
         }
 
-        public Product(string name, decimal Price, string Description) : this(name)
+        public Product(string name, int Price, string Description) : this(name)
         {
             this.Price = Price;
             this.Description = Description;
         }
 
         // properties
+        public int Id { get; set; }
         public string Name { get; set; }
         public Type type { get; set; }
-        public decimal Price { get; set; } // decimal is used for moneys
+        public int Price { get; set; }
         public string Description { get; set; }
     }
 }

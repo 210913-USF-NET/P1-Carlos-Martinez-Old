@@ -21,6 +21,7 @@ namespace UI
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0- Manage Products");
                 Console.WriteLine("1- Manage Stores");
+                Console.WriteLine("2- Manage Customers");
                 Console.WriteLine("x- Exit");
                 Console.WriteLine("Input: ");
 
@@ -34,6 +35,11 @@ namespace UI
                         // Add or remove stores. 
                         // Adjust inventories within stores. 
                         MenuFactory.GetMenu("manageStores").Start();
+                        break;
+                    case "2":
+                        // Add or remove stores. 
+                        // Adjust inventories within stores. 
+                        MenuFactory.GetMenu("manageCustomers").Start();
                         break;
                     case "x": 
                         // Leave

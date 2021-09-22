@@ -25,7 +25,7 @@ namespace UI
             {
                 Console.WriteLine("\nManaging product...");
                 if (activeProduct == null) Console.WriteLine("No active product, please select a product first.");
-                else Console.WriteLine($"Current active product: {activeProduct.Name}"); // should display active store by name. 
+                else Console.WriteLine($"Current active product: {activeProduct.Name}"); // should display active product by name. 
                 Console.WriteLine("0- Add Product");
                 Console.WriteLine("1- Change Active Product");
                 Console.WriteLine("2- Remove Product");
@@ -75,13 +75,13 @@ namespace UI
                         input = Console.ReadLine();
 
                         parseSuccess = int.TryParse(input, out parsedInput);
-                        if (parseSuccess && parsedInput >= 0)
+                        if (parseSuccess && parsedInput >= 0 && parsedInput < allProducts.Count)
                         {
                             activeProduct = allProducts[parsedInput];
                         }
                         else
                         {
-                            Console.WriteLine("Invalid input. Returning to store manager menu.");
+                            Console.WriteLine("Invalid input. Returning to product manager menu.");
                             break;
                         }
                         break; 
@@ -90,6 +90,7 @@ namespace UI
                         // Remove Product
                         Console.WriteLine("Not yet implemented.");
                         break; 
+
                     case "x": 
                         exit = true;
                         break;

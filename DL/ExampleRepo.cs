@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DL
 {
-    public class ExampleRepo : IRepo
+    public class ExampleRepo// : IRepo
     {
         // This is currently a file Repo, to allow testing and the like. 
 
