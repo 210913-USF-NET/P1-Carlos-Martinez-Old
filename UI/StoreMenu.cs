@@ -52,33 +52,14 @@ namespace UI
             {
                 manageStoresMenu _MSMinstance = new manageStoresMenu(_bl);
                 activeStore = _MSMinstance.selectStore();
-                // for (int i = 0; i < allRestos.Count; i++) 
-                // {
-                //     Console.WriteLine($"[{i}] {allRestos[i].Name}");
-                // }
-                // Console.Write("Which store would you like to switch to? ");
-                // string input = Console.ReadLine();
-                // int parsedInput;
-
-                // bool parseSuccess = int.TryParse(input, out parsedInput);
-                // if (parseSuccess && parsedInput >= 0 && parsedInput < allRestos.Count)
-                // {
-                //     activeStore = allRestos[parsedInput];
-                // }
-                // else
-                // {
-                //     Console.WriteLine("Invalid input. Returning to store manager menu.");
-                //     break;
-                // }
-                // break; 
-                // // They do not. Figure out where they want to go.
-                // Console.Write("Which store would you like to go to? ");
+                Console.WriteLine($"Setting default store to {activeStore.Name}");
+                custo.StoreFrontID = activeStore.Id;
             }
 
             bool exit = false;
             do
             {
-                Console.WriteLine("\nWelcome to my shop!");
+                Console.WriteLine($"\nWelcome to {activeStore.Name}!");
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0- Add Product to Shopping Cart");
                 Console.WriteLine("1- Change Store");

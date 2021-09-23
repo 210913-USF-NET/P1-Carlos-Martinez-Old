@@ -20,7 +20,7 @@ namespace DL
             Entity.Customer custoToAdd = new Entity.Customer(){
                 Name = custo.Name,
                 Credit = custo.Credit,
-                StoreFrontId = 0
+                StoreFrontId = -1
             };
 
             _context.Add(custoToAdd);
@@ -102,10 +102,26 @@ namespace DL
         }
         public Model.StoreFront GetStoreFront(int ID)
         {
-            // Other functions call this one to
-            // transform the ID they are given to
-            // the actual storefront object. 
-            return new Model.StoreFront();
+            // Can I just call the get all customers method?
+            List<Model.StoreFront> allStores = _context.StoreFronts.Select(
+                store => new Model.StoreFront() {
+                    Id = store.Id,
+                    Name = store.Name,
+                    // Orders = customer.Orders,
+                    // Inventory = customer.Inventory,
+                    // Credit = customer.Credit,
+                    // DefaultStore = customer.DefaultStore
+                }
+            ).ToList();
+
+            foreach (Model.StoreFront check in allStores)
+            {
+                if (check.Id == ID)
+                {
+                    return check;
+                }
+            }
+            return null;
         }
 
         List<Model.Product> IRepo.GetAllProducts()
