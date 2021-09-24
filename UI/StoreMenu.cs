@@ -30,6 +30,7 @@ namespace UI
                 Console.WriteLine("ID not found. Returning to main menu.");
                 return;
             }
+            Console.WriteLine(custo);
 
             // Check default store. 
             StoreFront activeStore = new StoreFront();
@@ -43,17 +44,20 @@ namespace UI
             // What if: Null default store? Ask where they want to go.
             // Else, take them there already. 
             
-            if(custo.StoreFrontID != -1)
+            if(custo.hasDefaultStore.Equals(1))
             {
                 // They have a default store. 
                 activeStore = allRestos[custo.StoreFrontID];
             }
             else
             {
+                Console.WriteLine("Where would you like to shop?");
                 manageStoresMenu _MSMinstance = new manageStoresMenu(_bl);
                 activeStore = _MSMinstance.selectStore();
                 Console.WriteLine($"Setting default store to {activeStore.Name}");
                 custo.StoreFrontID = activeStore.Id;
+                custo.hasDefaultStore = 1;
+                _bl.UpdateCustomer(custo);
             }
 
             bool exit = false;
@@ -72,15 +76,33 @@ namespace UI
                     case "0": 
                         // Add Product to Order
                         break; 
+
                     case "1": 
                         // Change Store
-                        break; 
+                        Console.WriteLine("Searching for all stores...");
+
+                        manageStoresMenu _instance = new manageStoresMenu(_bl);
+                        activeStore = _instance.selectStore();
+                        if (activeStore is null)
+                        {
+                            Console.WriteLine("There are no stores.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Store changed to {activeStore.Name}");
+                            custo.StoreFrontID = activeStore.Id;
+                            _bl.UpdateCustomer(custo);
+                            break;
+                        }
+
                     case "2": 
                         // Check Order
                           // Checkout, Remove Product from Order
                           // Should I make a switch inside the switch or send it over to a new menu?
                         break; 
-                    case "3": 
+
+                    case "x": 
                         exit = true;
                         break;
                 }

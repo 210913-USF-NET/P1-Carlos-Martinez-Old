@@ -59,9 +59,11 @@ namespace UI
                     case "2": 
                         // See Inventory
                         break; 
+
                     case "3": 
                         // Add Inventory
                         break; 
+                        
                     case "x": 
                         exit = true;
                         break;

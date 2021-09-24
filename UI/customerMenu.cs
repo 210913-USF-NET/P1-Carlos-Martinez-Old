@@ -84,6 +84,7 @@ namespace UI
 
 
                         // update customer!
+                        custo.hasDefaultStore = 1;
                         _bl.UpdateCustomer(custo);
 
                         break;

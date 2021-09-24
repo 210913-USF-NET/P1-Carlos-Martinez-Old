@@ -16,6 +16,7 @@ namespace DL.Entities
         public string Name { get; set; }
         public int? Credit { get; set; }
         public int? StoreFrontId { get; set; }
+        public int? HasDefaultStore { get; set; }
 
         public virtual StoreFront StoreFront { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

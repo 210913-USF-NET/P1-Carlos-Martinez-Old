@@ -23,6 +23,7 @@ namespace UI
                 Console.WriteLine("0- Yes");
                 Console.WriteLine("1- No");
                 Console.WriteLine("2- Management");
+                Console.WriteLine("3- Customer Profile");
                 Console.WriteLine("x- Exit");
                 Console.Write("Input: ");
 
@@ -51,8 +52,15 @@ namespace UI
                         break;
                     
                     case "3":
-                        // Test
+                        // Send them to the customer menu
                         MenuFactory.GetMenu("customer").Start();
+                        break;
+
+                    case "4":
+                        // TEST
+                        Customer testCusto = _bl.GetCustomer(1);
+                        testCusto.Name = "Rachel";
+                        _bl.UpdateCustomer(testCusto);
                         break;
                     
                     case "x":

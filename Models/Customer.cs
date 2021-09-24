@@ -10,8 +10,6 @@ namespace Models
         {
             // Start every customer out with 30 gold pieces. 
             Credit = 30;
-            // -1 means null in this case. 
-            StoreFrontID = -1;
         }
 
         // constructor w/ Name
@@ -25,10 +23,11 @@ namespace Models
         public string Name { get; set; }
         public int Credit { get; set; }
         public int StoreFrontID { get; set; }
+        public int hasDefaultStore { get; set; }
         
         public override string ToString()
         {
-            return $"Id: {this.Id}, Name: {this.Name}, Credit: {this.Credit}";
+            return $"Id: {this.Id}, Name: {this.Name}, Credit: {this.Credit}, StoreFrontID: {this.StoreFrontID}, hasDefaultStore: {this.hasDefaultStore}";
         }
     }
 }

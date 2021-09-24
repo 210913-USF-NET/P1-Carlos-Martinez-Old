@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Model = Models;
 using Entity = DL.Entities;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace DL
 {
     public class DBRepo : IRepo
     {
         // dbcontext
+        string connectionString = File.ReadAllText(@"../connectionString.txt");
         private Entity.LinguzRevatureStoreContext _context;
         public DBRepo(Entity.LinguzRevatureStoreContext context)
         {
@@ -49,27 +52,42 @@ namespace DL
 
         public Model.Customer UpdateCustomer(Model.Customer customerToUpdate)
         {
-            Entity.Customer custoToUpdate = new Entity.Customer() {
-                    Id = customerToUpdate.Id,
-                    Name = customerToUpdate.Name,
-                    Credit = customerToUpdate.Credit,
-                    // Orders = customerToUpdate.Orders,
-                    // Inventory = customerToUpdate.Inventory,
-                    // DefaultStore = defStore
-                };
+            string queryString = $"UPDATE Customer SET Name = @name, Credit = @money, StoreFrontId = @sfID, hasDefaultStore = @hDS WHERE Id = @cID;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@name", customerToUpdate.Name);
+                command.Parameters.AddWithValue("@money", customerToUpdate.Credit);
+                command.Parameters.AddWithValue("@sfID", customerToUpdate.StoreFrontID);
+                command.Parameters.AddWithValue("@hDS", customerToUpdate.hasDefaultStore);
+                command.Parameters.AddWithValue("@cID", customerToUpdate.Id);
+                command.ExecuteNonQuery();
+            }
 
-            custoToUpdate = _context.Customers.Update(custoToUpdate).Entity;
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
+            return customerToUpdate;
+            /* Entity.Customer custoToUpdate = new Entity.Customer() {
+                     Id = customerToUpdate.Id,
+                     Name = customerToUpdate.Name,
+                     Credit = customerToUpdate.Credit,
+                     // Orders = customerToUpdate.Orders,
+                     // Inventory = customerToUpdate.Inventory,
+                     StoreFrontId = customerToUpdate.StoreFrontID
+                 };
 
-            return new Model.Customer() {
-                    Id = custoToUpdate.Id,
-                    Name = custoToUpdate.Name,
-                    Credit = (int) custoToUpdate.Credit,
-                    // Orders = custoToUpdate.Orders,
-                    // Inventory = custoToUpdate.Inventory,
-                    // defaultStore = custoToUpdate.defaultStore
-             };
+             custoToUpdate = _context.Customers.Update(custoToUpdate).Entity;
+             _context.SaveChanges();
+             _context.ChangeTracker.Clear();
+
+             return new Model.Customer() {
+                     Id = custoToUpdate.Id,
+                     Name = custoToUpdate.Name,
+                     Credit = (int) custoToUpdate.Credit,
+                     // Orders = custoToUpdate.Orders,
+                     // Inventory = custoToUpdate.Inventory,
+                     // StoreFrontID = custoToUpdate.StoreFrontId
+                     
+              } */
         }
 
         Model.Product IRepo.AddProduct(Model.Product product)
@@ -139,6 +157,7 @@ namespace DL
         {
             return _context.StoreFronts.Select(
                 store => new Model.StoreFront() {
+                    Id = store.Id,
                     Name = store.Name
                 }
             ).ToList();
@@ -153,8 +172,9 @@ namespace DL
                     Name = customer.Name,
                     // Orders = customer.Orders,
                     // Inventory = customer.Inventory,
-                    // Credit = customer.Credit,
-                    // DefaultStore = customer.DefaultStore
+                    Credit = (int) customer.Credit,
+                    StoreFrontID = (int) customer.StoreFrontId,
+                    hasDefaultStore = (int) customer.HasDefaultStore
                 }
             ).ToList();
 
