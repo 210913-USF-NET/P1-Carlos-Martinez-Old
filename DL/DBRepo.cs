@@ -22,8 +22,7 @@ namespace DL
         {
             Entity.Customer custoToAdd = new Entity.Customer(){
                 Name = custo.Name,
-                Credit = custo.Credit,
-                StoreFrontId = -1
+                Credit = custo.Credit
             };
 
             _context.Add(custoToAdd);
@@ -104,6 +103,47 @@ namespace DL
 
             return product;
         }
+        Model.Inventory IRepo.AddInventory(Model.Inventory inventory)
+        {
+            Entity.Inventory invToAdd = new Entity.Inventory(){
+                StoreId = inventory.StoreFrontId,
+                ProductId = inventory.ProductId,
+                Quantity = inventory.Quantity
+            };
+
+            List<Model.Inventory> storeInventory = GetInventory(inventory.StoreFrontId);
+
+            int check = 0;
+            foreach (Model.Inventory item in storeInventory)
+            {
+                if (item.ProductId == invToAdd.ProductId)
+                {
+                    check = item.Quantity + invToAdd.Quantity;
+                }
+            }
+
+            // Update the quantity in the DB instead of adding a brand new one. 
+            if (check != 0) {
+                // UPDATE
+                string queryString = $"UPDATE Inventory SET Quantity = @quant WHERE StoreId = @SID AND ProductId = @PID;";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@quant", check);
+                    command.Parameters.AddWithValue("@SID", invToAdd.StoreId);
+                    command.Parameters.AddWithValue("@PID", invToAdd.ProductId);
+                    command.ExecuteNonQuery();
+                    return inventory;
+                }
+            }
+
+            _context.Add(invToAdd);
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+
+            return inventory;
+        }
 
         Model.StoreFront IRepo.AddStoreFront(Model.StoreFront store)
         {
@@ -120,7 +160,6 @@ namespace DL
         }
         public Model.StoreFront GetStoreFront(int ID)
         {
-            // Can I just call the get all customers method?
             List<Model.StoreFront> allStores = _context.StoreFronts.Select(
                 store => new Model.StoreFront() {
                     Id = store.Id,
@@ -141,7 +180,7 @@ namespace DL
             }
             return null;
         }
-
+        
         List<Model.Product> IRepo.GetAllProducts()
         {
             return _context.Products.Select(
@@ -186,6 +225,51 @@ namespace DL
                 }
             }
             return null;
+        }
+        public List<Model.Inventory> GetInventory(int store)
+        {
+            // grab all the Inventories
+            // cycle through them until I find the store ID
+
+            List<Model.Inventory> allInventories = _context.Inventories.Select(
+                inventory => new Model.Inventory() {
+                    ProductId = inventory.ProductId,
+                    StoreFrontId = inventory.StoreId,
+                    Quantity = inventory.Quantity
+                }
+            ).ToList();
+
+            List<Model.Product> allProducts = _context.Products.Select(
+                        product => new Model.Product() {
+                            Name = product.Name,
+                            Price = product.Price,
+                            Description = product.Description
+                        }
+                    ).ToList();
+
+            List<Model.StoreFront> allStores = _context.StoreFronts.Select(
+                        store => new Model.StoreFront() {
+                            Id = store.Id,
+                            Name = store.Name
+                        }
+                    ).ToList();
+
+            List<Model.Inventory> readableInventory = new List<Model.Inventory>();
+
+            Model.Inventory newEntry = new Model.Inventory();
+
+            foreach (Model.Inventory inventoryLine in allInventories)
+            {
+                // SKIP any Inventory object which does not have Inventory.StoreFrontID = activeStore.Id (store)
+                if(inventoryLine.StoreFrontId != store) continue;
+
+                // Combine the Product and Quantity into a readable format. 
+                newEntry.Product = allProducts[inventoryLine.ProductId].Name;
+                newEntry.Quantity = inventoryLine.Quantity;
+                readableInventory.Add(newEntry);
+            }
+
+            return readableInventory;
         }
     }
 }

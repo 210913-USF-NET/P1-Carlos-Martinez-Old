@@ -14,6 +14,8 @@ namespace UI
             _bl = bl;
         }
 
+        private commonMethods CM = new commonMethods();
+
         public void Start()
         {
             bool exit = false;
@@ -58,10 +60,73 @@ namespace UI
 
                     case "2": 
                         // See Inventory
+                        if (activeStore is null)
+                        {
+                            Console.WriteLine("Please select a store first.");
+                            break;
+                        }
+
+                        SeeInventoryofStore(activeStore);
                         break; 
 
                     case "3": 
                         // Add Inventory
+                        if (activeStore is null)
+                        {
+                            Console.WriteLine("Please select a store first.");
+                            break;
+                        }
+
+                        string entry;
+                        int quantity;
+                        int parsedInput;
+            
+                        // List all products
+                        // Ask which you want to add
+                        // 
+                        List<Product> allProducts = _bl.GetAllProducts();
+                        seeProducts(allProducts);
+                        Console.Write("Which product would you like to add? ");
+
+                        entry = Console.ReadLine();
+                        parsedInput = CM.convertString(entry, 0, allProducts.Count+1);
+
+                        if (parsedInput == -1)
+                        {
+                            Console.WriteLine("Please enter a valid number. Returning to store manager menu.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.Write("How many would you like to add? ");
+                            entry = Console.ReadLine();
+                            quantity = CM.convertString(entry, 0);
+                            if (quantity == -1)
+                            {
+                                Console.WriteLine("Please enter a valid number. Returning to store manager menu.");
+                                break;
+                            }
+                            else
+                            {
+                                // THIS does not work. 
+                                Inventory addedProduct = new Inventory(parsedInput, activeStore.Id, quantity);
+                                _bl.AddInventory(addedProduct);
+                            }
+                        }
+
+                        /*
+                        parseSuccess = int.TryParse(input, out parsedInput);
+                        if (parseSuccess && parsedInput >= 0 && parsedInput < allProducts.Count)
+                        {
+                            // add item to inventory for the selected store. 
+                            Inventory addedProduct = new Inventory(allProducts[parsedInput].Id, activeStore.Id, quantity);
+                            activeStore.Inventories.Add(allProducts[parsedInput]);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Returning to product manager menu.");
+                            break;
+                        } */
                         break; 
                         
                     case "x": 
@@ -98,5 +163,35 @@ namespace UI
                 goto selectStore;
             }
         }
+
+        public void seeProducts(List<Product> allProducts)
+        {
+            // Goes through each item in the list provided and displays information about them. 
+            string currentProduct;
+            for (int i = 0; i < allProducts.Count; i++)
+            {
+                currentProduct = $"[{i}] {allProducts[i].Name}";
+                currentProduct = currentProduct + $" ({allProducts[i].Price})";
+                currentProduct = currentProduct + $": {allProducts[i].Description}";
+                Console.WriteLine(currentProduct);
+            }
+        }
+
+        private void SeeInventoryofStore(StoreFront activeStore) {
+            // print the inventory of a store
+            List<Inventory> storeInventory = _bl.GetInventory(activeStore.Id);
+
+            if (storeInventory.Count == 0)
+            {
+                Console.WriteLine("The Store is empty!");
+                return;
+            }
+
+            for (int i = 0; i < storeInventory.Count; i++)
+            {
+                Console.WriteLine($"[{i}] {storeInventory[i]}");
+            }
+        }
+        
     }
 }

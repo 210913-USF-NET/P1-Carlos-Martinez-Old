@@ -54,5 +54,14 @@ namespace BL
         {
             return _repo.UpdateCustomer(cust);
         }
+        public Inventory AddInventory(Inventory inventory)
+        {
+            return _repo.AddInventory(inventory);
+        }
+
+        public List<Inventory> GetInventory(int store)
+        {
+            return _repo.GetInventory(store);
+        }
     }
 }

@@ -5,10 +5,7 @@ namespace Models
 {
     public class StoreFront
     {
-        public StoreFront() 
-        {
-            Inventories = new List<Inventory>();
-        }
+        public StoreFront() {}
         
         // constructor w/ Name
         public StoreFront(string name) : this()
@@ -19,7 +16,6 @@ namespace Models
         // properties
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Inventory> Inventories { get; set; }
         
         public override string ToString()
         {

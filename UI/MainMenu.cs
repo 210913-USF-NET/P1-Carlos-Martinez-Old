@@ -83,7 +83,8 @@ namespace UI
             Console.Write("What is your name? ");
             string name = Console.ReadLine();
 
-            Console.WriteLine("Thank you.");
+            List<Customer> allCustos = _bl.GetAllCustomers();
+            Console.WriteLine($"Thank you. Your unique ID is {allCustos.Count}");
 
             Customer newCusto = new Customer(name);
             _bl.AddCustomer(newCusto);

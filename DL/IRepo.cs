@@ -20,5 +20,9 @@ namespace DL
         List<Customer> GetAllCustomers();
         Customer GetCustomer(int name);
         Customer UpdateCustomer(Customer cust);
+
+        // Inventory
+        Inventory AddInventory(Inventory inventory);
+        List<Inventory> GetInventory(int store);
     }
 }

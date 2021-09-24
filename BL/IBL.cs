@@ -18,5 +18,9 @@ namespace BL
         List<Customer> GetAllCustomers();
         Customer GetCustomer(int ID);
         Customer UpdateCustomer(Customer cust);
+
+        // Inventories
+        List<Inventory> GetInventory(int store);
+        Inventory AddInventory(Inventory inventory);
     }
 }
