@@ -2,6 +2,7 @@ using BL;
 using Models;
 using System;
 using System.Collections.Generic;  
+using System.Linq;
 
 namespace UI
 {
@@ -75,6 +76,7 @@ namespace UI
                 {
                     case "0": 
                         // Add Product to Order
+                        addProductToOrder(activeStore, custo);
                         break; 
 
                     case "1": 
@@ -107,6 +109,59 @@ namespace UI
                         break;
                 }
             } while(!exit);
+        }
+
+        private void addProductToOrder(StoreFront store, Customer custo)
+        {
+            Orders currentOrder = new Orders(custo.Id);
+            int runningTotal = 0;
+
+            // Need to join storeInventory and Product
+            List<Inventory> storeInventory = _bl.GetInventory(store.Id);
+            List<Product> allProducts = _bl.GetAllProducts();
+            List<joinedInventory> joinedInventory = new List<joinedInventory>();
+            var tempInventory = from m1 in storeInventory
+                join m2 in allProducts on m1.ProductId equals m2.Id
+                select new {m2.Name, m1.Quantity, m2.Price, m2.Description};
+
+            // also create a lineitem every time the following loop is active. 
+            string input;
+
+            foreach (var item in tempInventory)
+            {
+                joinedInventory.Add(new joinedInventory(item.Name, item.Price, item.Quantity, item.Description));
+            }
+
+            // Display products
+              // 'c' returns null, for cancel
+              // should I deduct inventory as they go?
+                // if they cancel, gotta restock inventory
+              // should I deduct inventory at checkout? <<partial to this idea>>
+                // need to stop them from buying more than all
+            // Get customer input
+            // Ask for quantity
+              // Check if they have bought more than all. If so, set to buy all. 
+            // Create LineItem with information (orderId, inventoryID)
+            // Add LineItem to DB and List
+            // Ask if they want to checkout or buy more. 
+            // Repeat if buy more.
+            // Else, go to cashOut. 
+
+            do
+            {
+                // joinedInventory has the store's inventory. 
+                // [0] Axe (5 gp, description);
+                int i = 0 ;
+                foreach (var item in joinedInventory)
+                {
+                    Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {item.Description})");
+                    i++;
+                }
+
+                // next: Get customer input. 
+                input = 'x';
+            } while(!(input.Equals('x')));
+            // this will probably return an Order. 
         }
     }
 }

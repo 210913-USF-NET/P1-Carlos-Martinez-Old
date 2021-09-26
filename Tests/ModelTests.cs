@@ -16,13 +16,13 @@ namespace Tests
         public void Template()
         {
             // Arrange
-            IRepo repo = new DBRepo(context);
+            
 
             // Act
-            var customers = repo.GetAllCustomers();
+            
 
             // Assert
-            Assert.Equal(2, customers.Count);
+            
         }
     }
 }
