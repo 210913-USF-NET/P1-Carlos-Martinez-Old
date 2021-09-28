@@ -20,11 +20,11 @@ namespace UI
             {
                 Console.WriteLine("\nWelcome to the Emporium!");
                 Console.WriteLine("Have you shopped with us before?");
-                Console.WriteLine("0- Yes");
-                Console.WriteLine("1- No");
-                Console.WriteLine("2- Management");
-                Console.WriteLine("3- Customer Profile");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] Yes");
+                Console.WriteLine("[1] No");
+                Console.WriteLine("[2] Management");
+                Console.WriteLine("[3] Customer Profile");
+                Console.WriteLine("[x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -58,9 +58,31 @@ namespace UI
 
                     case "4":
                         // TEST
-                        Customer testCusto = _bl.GetCustomer(1);
-                        testCusto.Name = "Rachel";
-                        _bl.UpdateCustomer(testCusto);
+                        // var tempInventory = from m1 in storeInventory
+                        //     join m2 in allProducts on m1.ProductId equals m2.Id
+                        //     select new {m1.Id, m2.Name, m1.Quantity, m2.Price, m2.Description};
+                        commonMethods CM = new commonMethods();
+
+                        bla:
+                        string NameGiven = Console.ReadLine();
+                        int Credit = CM.convertString(Console.ReadLine(),0);
+                        int StoreFrontId = CM.convertString(Console.ReadLine(),0);
+                        
+                        List<Customer> allCustomers = _bl.GetAllCustomers();
+                        for (int i = 0; i < allCustomers.Count; i++)
+                        {
+                            if (allCustomers[i].Name == NameGiven && allCustomers[i].Credit == Credit && allCustomers[i].StoreFrontID == StoreFrontId)
+                            {
+                            // they find all three!
+                            Console.WriteLine("Got it!");
+                            }
+                            else 
+                            {
+                                Console.WriteLine("Try again!");
+                                goto bla;
+                            }
+                        }
+
                         break;
                     
                     case "x":

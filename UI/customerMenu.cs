@@ -41,10 +41,10 @@ namespace UI
             {
                 Console.WriteLine($"\nWelcome {custo.Name}!");
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("0- View Past Orders");
-                Console.WriteLine("1- Change Default Store");
-                Console.WriteLine("2- Buy Credit");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] View Past Orders");
+                Console.WriteLine("[1] Change Default Store");
+                Console.WriteLine("[2] Buy Credit");
+                Console.WriteLine("[x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())

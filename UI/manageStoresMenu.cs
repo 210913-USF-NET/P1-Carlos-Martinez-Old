@@ -25,11 +25,11 @@ namespace UI
                 Console.WriteLine("\nManaging stores...");
                 if (activeStore == null) Console.WriteLine("No active store, please select a store first.");
                 else Console.WriteLine($"Current active store: {activeStore.Name}"); // should display active store by name. 
-                Console.WriteLine("0- Add Store");
-                Console.WriteLine("1- Change Store");
-                Console.WriteLine("2- See Inventory");
-                Console.WriteLine("3- Add Inventory");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] Add Store");
+                Console.WriteLine("[1] Change Store");
+                Console.WriteLine("[2] See Inventory");
+                Console.WriteLine("[3] Add Inventory");
+                Console.WriteLine("[x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())

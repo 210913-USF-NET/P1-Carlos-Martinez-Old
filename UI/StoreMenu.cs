@@ -14,11 +14,11 @@ namespace UI
         {
             _bl = bl;
         }
+        commonMethods _CMinstance = new commonMethods();
 
         public void Start()
         {
             Console.WriteLine("\nEnter your unique ID: ");
-            commonMethods _CMinstance = new commonMethods();
             int input = _CMinstance.convertString(Console.ReadLine(), 0);
             if (input == -1)
             {
@@ -55,7 +55,7 @@ namespace UI
                 Console.WriteLine("Where would you like to shop?");
                 manageStoresMenu _MSMinstance = new manageStoresMenu(_bl);
                 activeStore = _MSMinstance.selectStore();
-                Console.WriteLine($"Setting default store to {activeStore.Name}");
+                Console.WriteLine($"Setting default store to {activeStore.Name}.");
                 custo.StoreFrontID = activeStore.Id;
                 custo.hasDefaultStore = 1;
                 _bl.UpdateCustomer(custo);
@@ -66,10 +66,10 @@ namespace UI
             {
                 Console.WriteLine($"\nWelcome to {activeStore.Name}!");
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("0- Add Product to Shopping Cart");
-                Console.WriteLine("1- Change Store");
-                Console.WriteLine("2- Check Shopping Cart");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] Add Product to Shopping Cart");
+                Console.WriteLine("[1] Change Store");
+                Console.WriteLine("[2] Check Shopping Cart");
+                Console.WriteLine("[x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -113,54 +113,215 @@ namespace UI
 
         private void addProductToOrder(StoreFront store, Customer custo)
         {
+            if (custo.Credit == 0)
+            {
+                Console.WriteLine("You have no credit. Please add some before shopping.");
+            }
+            else if (custo.Credit < 0)
+            {
+                Console.WriteLine("You have a past due balance of");
+            }
+
+            // Current Goal: 
+            // Refactor this into different calls to BL. 
+
             Orders currentOrder = new Orders(custo.Id);
+            currentOrder.Id = _bl.GetAllOrders().Count;
+
             int runningTotal = 0;
 
             // Need to join storeInventory and Product
             List<Inventory> storeInventory = _bl.GetInventory(store.Id);
             List<Product> allProducts = _bl.GetAllProducts();
             List<joinedInventory> joinedInventory = new List<joinedInventory>();
-            var tempInventory = from m1 in storeInventory
-                join m2 in allProducts on m1.ProductId equals m2.Id
-                select new {m2.Name, m1.Quantity, m2.Price, m2.Description};
+            List<joinedInventory> LineItemInfo = new List<joinedInventory>();
+
+
+            // var tempInventory = from m1 in storeInventory
+            //     join m2 in allProducts on m1.ProductId equals m2.Id
+            //     select new {m1.Id, m2.Name, m1.Quantity, m2.Price, m2.Description};
 
             // also create a lineitem every time the following loop is active. 
             string input;
 
-            foreach (var item in tempInventory)
+            // easier to parse through it if it's a list...
+            // int trueQuantity;
+            // int j = 0;
+            for (int j = 0; j<storeInventory.Count; j++)
             {
-                joinedInventory.Add(new joinedInventory(item.Name, item.Price, item.Quantity, item.Description));
+                if (storeInventory[j].StoreFrontId == store.Id)
+                {
+                    joinedInventory.Add(new joinedInventory(
+                        storeInventory[j].Id, 
+                        allProducts[storeInventory[j].ProductId].Name, 
+                        storeInventory[j].Quantity, 
+                        allProducts[storeInventory[j].ProductId].Price, 
+                        allProducts[storeInventory[j].ProductId].Description
+                ));
+                }
             }
-
-            // Display products
-              // 'c' returns null, for cancel
-              // should I deduct inventory as they go?
-                // if they cancel, gotta restock inventory
-              // should I deduct inventory at checkout? <<partial to this idea>>
-                // need to stop them from buying more than all
-            // Get customer input
-            // Ask for quantity
-              // Check if they have bought more than all. If so, set to buy all. 
-            // Create LineItem with information (orderId, inventoryID)
-            // Add LineItem to DB and List
-            // Ask if they want to checkout or buy more. 
-            // Repeat if buy more.
-            // Else, go to cashOut. 
+            // foreach (var item in tempInventory)
+            // {
+            //     trueQuantity = storeInventory[j].Quantity;
+            //     joinedInventory.Add(new joinedInventory(item.Id, item.Name, trueQuantity, item.Price, item.Description));
+            //     j++;
+            // }
+            List<LineItem> LineItemHolder = new List<LineItem>();
 
             do
             {
                 // joinedInventory has the store's inventory. 
                 // [0] Axe (5 gp, description);
-                int i = 0 ;
-                foreach (var item in joinedInventory)
+                int i = 0;
+                int quantity = 0;
+                foreach (joinedInventory item in joinedInventory)
                 {
-                    Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {item.Description})");
+                    // If each item in the store's inventory has any quantity, 
+                    // print said item. Otherwise, skip it. 
+                    // Assumption: Every store will have every item. 
+                    quantity = item.Quantity;
+                    if (LineItemInfo.Count != 0)
+                    {
+                        foreach (joinedInventory lineitem in LineItemInfo)
+                        {
+                            if (lineitem.Id == item.Id)
+                            {
+                                quantity -= lineitem.Quantity;
+                            }
+                        }
+                    }
+
+                    if (item.Quantity == 0) Console.WriteLine($"[{i}] {item.Name}: Out of Stock");
+                    else Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {item.Quantity} available, {item.Description})");
                     i++;
                 }
+                Console.WriteLine("[x] Exit or Checkout");
 
                 // next: Get customer input. 
-                input = 'x';
+                command:
+                Console.Write("Enter your command: ");
+                input = Console.ReadLine();
+                if (input == "x")
+                {
+                    break;
+                }
+
+                int parsedInt = _CMinstance.convertString(input, 0, joinedInventory.Count-1);
+
+                if (parsedInt == -1)
+                {
+                    Console.WriteLine("Please enter a valid input.");
+                    goto command;
+                } else if (joinedInventory[parsedInt].Quantity == 0)
+                {
+                    Console.WriteLine("We do not have that product currently in store.");
+                    goto command;
+                }
+                // parsedInt should contain the index of the item the customer wants now. 
+
+                quantity:
+                Console.Write($"How many {joinedInventory[parsedInt].Name}(s) do you want? \nThere are {joinedInventory[parsedInt].Quantity} available. ");
+                input = Console.ReadLine();
+                int amount = _CMinstance.convertString(input, 1);
+
+                if (amount == -1)
+                {
+                    Console.WriteLine("Please enter a valid input.");
+                    goto quantity;
+                } else if (amount > joinedInventory[parsedInt].Quantity)
+                {
+                    Console.WriteLine($"You are limited to buying {joinedInventory[parsedInt].Quantity} currently.");
+                    amount = joinedInventory[parsedInt].Quantity;
+                }
+                LineItem currentItem = new LineItem(currentOrder.Id, joinedInventory[parsedInt].Id, amount);
+                LineItemHolder.Add(currentItem);
+                runningTotal = runningTotal + (amount * joinedInventory[parsedInt].Price);
+                joinedInventory currentInv = new joinedInventory(joinedInventory[parsedInt]);
+                LineItemInfo.Add(currentInv);
+                LineItemInfo.Last().Quantity = amount;
             } while(!(input.Equals('x')));
+
+
+            // They have exited at this point with their full order. 
+            currentOrder.Total = runningTotal;
+            bool cancel = false;
+
+            cancel:
+            if (LineItemInfo.Count == 0 || cancel)
+            {
+                Console.WriteLine("Cancelling order...");
+                return;
+            }
+
+            char confirmation;
+            while (true)
+            {
+                // print out their current order.
+                for (int i = 0; i < LineItemInfo.Count; i++)
+                {
+                    Console.WriteLine($"[{i}] {LineItemInfo[i].Name} x{LineItemInfo[i].Quantity} ({LineItemInfo[i].Price * LineItemInfo[i].Quantity} gp, {LineItemInfo[i].Description})");
+                }
+                Console.WriteLine($"Total: {currentOrder.Total} gold pieces");
+                Console.WriteLine("\n[x] Cancel Order");
+                Console.WriteLine("[c] Check Out Order");
+                input = Console.ReadLine();
+                switch (input)
+                {
+                    case "x":
+                        Console.WriteLine("Type 'Y' to confirm cancelling your order.");
+                        confirmation = Char.ToUpper(Console.ReadLine()[0]);
+                        if (confirmation.Equals('Y')) 
+                        {
+                            cancel = true;
+                            goto cancel;
+                        }
+                        break;
+                    
+                    case "c":
+                        Console.WriteLine("Type 'Y' to check out.");
+                        confirmation = Char.ToUpper(Console.ReadLine()[0]);
+                        if (confirmation.Equals('Y'))
+                        {
+                            goto checkOut;
+                        }
+                        break;
+                    
+                    default:
+                        Console.WriteLine("Invalid entry.");
+                        break;
+                }
+            }
+
+            checkOut: 
+
+            custo.Credit = custo.Credit - currentOrder.Total;
+            if (custo.Credit < 0)
+            {
+                Console.WriteLine($"You owe {Math.Abs(custo.Credit)} gold coins. Please pay your balance due at your earliest convenience.");
+            } else {
+                Console.WriteLine($"You have {custo.Credit} gold coins left.");
+            }
+
+            foreach (joinedInventory item in LineItemInfo)
+            {
+                Console.WriteLine($"item id: {item.Id} for {item.Name}");
+                // This needs to be fixed. 
+                foreach (Inventory itemToUpdate in storeInventory)
+                {
+                    // itemToUpdate.Id is the INVENTORY ID. 
+                    Console.WriteLine($"\titemToUpdate: {itemToUpdate.Id} for {itemToUpdate.ProductId} AKA {itemToUpdate.Product}");
+                    if (itemToUpdate.Id == item.Id)
+                    {
+                        Console.WriteLine("\t\t***");
+                        itemToUpdate.Quantity -= item.Quantity;
+                    }
+                }
+            }
+            
+            _bl.AddOrder(currentOrder);
+            _bl.AddLineItem(LineItemHolder);
+            _bl.UpdateInventory(storeInventory);
+            _bl.UpdateCustomer(custo);
             // this will probably return an Order. 
         }
     }

@@ -19,10 +19,10 @@ namespace UI
             {
                 Console.WriteLine("Welcome to the manager menu.");
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("0- Manage Products");
-                Console.WriteLine("1- Manage Stores");
-                Console.WriteLine("2- Manage Customers");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] Manage Products");
+                Console.WriteLine("[1] Manage Stores");
+                Console.WriteLine("[2] Manage Customers");
+                Console.WriteLine("[x] Exit");
                 Console.WriteLine("Input: ");
 
                 switch (Console.ReadLine())

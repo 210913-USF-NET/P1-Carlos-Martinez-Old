@@ -24,5 +24,10 @@ namespace Models
         public Type type { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
+        
+        public override string ToString()
+        {
+            return $"Name: {this.Name}, Price: {this.Price}";
+        }
     }
 }

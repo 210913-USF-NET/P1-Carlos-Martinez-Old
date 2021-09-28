@@ -26,10 +26,10 @@ namespace UI
                 Console.WriteLine("\nManaging product...");
                 if (activeProduct == null) Console.WriteLine("No active product, please select a product first.");
                 else Console.WriteLine($"Current active product: {activeProduct.Name}"); // should display active product by name. 
-                Console.WriteLine("0- Add Product");
-                Console.WriteLine("1- Change Active Product");
-                Console.WriteLine("2- Remove Product");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] Add Product");
+                Console.WriteLine("[1] Change Active Product");
+                Console.WriteLine("[2] Remove Product");
+                Console.WriteLine("[x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -88,7 +88,7 @@ namespace UI
 
                     case "2": 
                         // Remove Product
-                        Console.WriteLine("Not yet implemented.");
+                        Console.WriteLine("Will be coming in a later edition.");
                         break; 
 
                     case "x": 

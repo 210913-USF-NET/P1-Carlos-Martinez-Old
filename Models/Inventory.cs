@@ -30,5 +30,10 @@ namespace Models
         {
             return $"Product: {this.Product}, Quantity: {this.Quantity}";
         }
+
+        public string fullString()
+        {
+            return $"Id: {this.Id}, Product: {this.ProductId}, StoreFrontId: {this.StoreFrontId}, Quantity: {this.Quantity}";
+        }
     }
 }

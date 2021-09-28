@@ -18,7 +18,9 @@ namespace DL
         {
             _context = context;
         }
-        Model.Customer IRepo.AddCustomer(Model.Customer custo)
+
+        // [[CUSTOMERS]]
+        public Model.Customer AddCustomer(Model.Customer custo)
         {
             Entity.Customer custoToAdd = new Entity.Customer(){
                 Name = custo.Name,
@@ -31,8 +33,7 @@ namespace DL
 
             return custo;
         }
-
-        List<Model.Customer> IRepo.GetAllCustomers()
+        public List<Model.Customer> GetAllCustomers()
         {
             // select * from Customers in SQL Query
             // Gets Entities.Customer
@@ -51,45 +52,58 @@ namespace DL
 
         public Model.Customer UpdateCustomer(Model.Customer customerToUpdate)
         {
-            string queryString = $"UPDATE Customer SET Name = @name, Credit = @money, StoreFrontId = @sfID, hasDefaultStore = @hDS WHERE Id = @cID;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand(queryString, connection);
-                command.Parameters.AddWithValue("@name", customerToUpdate.Name);
-                command.Parameters.AddWithValue("@money", customerToUpdate.Credit);
-                command.Parameters.AddWithValue("@sfID", customerToUpdate.StoreFrontID);
-                command.Parameters.AddWithValue("@hDS", customerToUpdate.hasDefaultStore);
-                command.Parameters.AddWithValue("@cID", customerToUpdate.Id);
-                command.ExecuteNonQuery();
-            }
+            Entities.Customer updatedCust = (from c in _context.Customers
+                where c.Id == customerToUpdate.Id
+                select c).SingleOrDefault();
+
+            updatedCust.Credit = customerToUpdate.Credit;
+            updatedCust.HasDefaultStore = customerToUpdate.hasDefaultStore;
+            updatedCust.StoreFrontId = customerToUpdate.StoreFrontID;
+
+            _context.SaveChanges();
+
+            // string queryString = $"UPDATE Customer SET Name = @name, Credit = @money, StoreFrontId = @sfID, hasDefaultStore = @hDS WHERE Id = @cID;";
+            // using (SqlConnection connection = new SqlConnection(connectionString))
+            // {
+            //     connection.Open();
+            //     SqlCommand command = new SqlCommand(queryString, connection);
+            //     command.Parameters.AddWithValue("@name", customerToUpdate.Name);
+            //     command.Parameters.AddWithValue("@money", customerToUpdate.Credit);
+            //     command.Parameters.AddWithValue("@sfID", customerToUpdate.StoreFrontID);
+            //     command.Parameters.AddWithValue("@hDS", customerToUpdate.hasDefaultStore);
+            //     command.Parameters.AddWithValue("@cID", customerToUpdate.Id);
+            //     command.ExecuteNonQuery();
+            // }
 
             return customerToUpdate;
-            /* Entity.Customer custoToUpdate = new Entity.Customer() {
-                     Id = customerToUpdate.Id,
-                     Name = customerToUpdate.Name,
-                     Credit = customerToUpdate.Credit,
-                     // Orders = customerToUpdate.Orders,
-                     // Inventory = customerToUpdate.Inventory,
-                     StoreFrontId = customerToUpdate.StoreFrontID
-                 };
-
-             custoToUpdate = _context.Customers.Update(custoToUpdate).Entity;
-             _context.SaveChanges();
-             _context.ChangeTracker.Clear();
-
-             return new Model.Customer() {
-                     Id = custoToUpdate.Id,
-                     Name = custoToUpdate.Name,
-                     Credit = (int) custoToUpdate.Credit,
-                     // Orders = custoToUpdate.Orders,
-                     // Inventory = custoToUpdate.Inventory,
-                     // StoreFrontID = custoToUpdate.StoreFrontId
-                     
-              } */
         }
+        public Model.Customer GetCustomer(int ID)
+        {
+            // Can I just call the get all customers method?
+            List<Model.Customer> allCustos = _context.Customers.Select(
+                customer => new Model.Customer() {
+                    Id = customer.Id,
+                    Name = customer.Name,
+                    // Orders = customer.Orders,
+                    // Inventory = customer.Inventory,
+                    Credit = (int) customer.Credit,
+                    StoreFrontID = (int) customer.StoreFrontId,
+                    hasDefaultStore = (int) customer.HasDefaultStore
+                }
+            ).ToList();
 
-        Model.Product IRepo.AddProduct(Model.Product product)
+            foreach (Model.Customer check in allCustos)
+            {
+                if (check.Id == ID)
+                {
+                    return check;
+                }
+            }
+            return null;
+        }
+        
+        // [PRODUCTS]
+        public Model.Product AddProduct(Model.Product product)
         {
             Entity.Product prodToAdd = new Entity.Product(){
                 Name = product.Name,
@@ -103,7 +117,65 @@ namespace DL
 
             return product;
         }
-        Model.Inventory IRepo.AddInventory(Model.Inventory inventory)
+        public List<Model.Product> GetAllProducts()
+        {
+            return _context.Products.Select(
+                product => new Model.Product() {
+                    Name = product.Name,
+                    Price = product.Price,
+                    Description = product.Description
+                }
+            ).ToList();
+        }
+
+        // [[STOREFRONTS]]
+        public Model.StoreFront AddStoreFront(Model.StoreFront store)
+        {
+            Entity.StoreFront storeToAdd = new Entity.StoreFront(){
+                Name = store.Name,
+                // Inventories = store.Inventories
+            };
+
+            _context.Add(storeToAdd);
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+
+            return store;
+        }
+        public Model.StoreFront GetStoreFront(int ID)
+        {
+            List<Model.StoreFront> allStores = _context.StoreFronts.Select(
+                store => new Model.StoreFront() {
+                    Id = store.Id,
+                    Name = store.Name,
+                    // Orders = customer.Orders,
+                    // Inventory = customer.Inventory,
+                    // Credit = customer.Credit,
+                    // DefaultStore = customer.DefaultStore
+                }
+            ).ToList();
+
+            foreach (Model.StoreFront check in allStores)
+            {
+                if (check.Id == ID)
+                {
+                    return check;
+                }
+            }
+            return null;
+        }
+        public List<Model.StoreFront> GetAllStoreFronts()
+        {
+            return _context.StoreFronts.Select(
+                store => new Model.StoreFront() {
+                    Id = store.Id,
+                    Name = store.Name
+                }
+            ).ToList();
+        }
+
+        // [[INVENTORY]]
+        public Model.Inventory AddInventory(Model.Inventory inventory)
         {
             Entity.Inventory invToAdd = new Entity.Inventory(){
                 StoreId = inventory.StoreFrontId,
@@ -144,88 +216,6 @@ namespace DL
 
             return inventory;
         }
-
-        Model.StoreFront IRepo.AddStoreFront(Model.StoreFront store)
-        {
-            Entity.StoreFront storeToAdd = new Entity.StoreFront(){
-                Name = store.Name,
-                // Inventories = store.Inventories
-            };
-
-            _context.Add(storeToAdd);
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-
-            return store;
-        }
-        public Model.StoreFront GetStoreFront(int ID)
-        {
-            List<Model.StoreFront> allStores = _context.StoreFronts.Select(
-                store => new Model.StoreFront() {
-                    Id = store.Id,
-                    Name = store.Name,
-                    // Orders = customer.Orders,
-                    // Inventory = customer.Inventory,
-                    // Credit = customer.Credit,
-                    // DefaultStore = customer.DefaultStore
-                }
-            ).ToList();
-
-            foreach (Model.StoreFront check in allStores)
-            {
-                if (check.Id == ID)
-                {
-                    return check;
-                }
-            }
-            return null;
-        }
-        
-        List<Model.Product> IRepo.GetAllProducts()
-        {
-            return _context.Products.Select(
-                product => new Model.Product() {
-                    Name = product.Name,
-                    Price = product.Price,
-                    Description = product.Description
-                }
-            ).ToList();
-        }
-
-        List<Model.StoreFront> IRepo.GetAllStoreFronts()
-        {
-            return _context.StoreFronts.Select(
-                store => new Model.StoreFront() {
-                    Id = store.Id,
-                    Name = store.Name
-                }
-            ).ToList();
-        }
-
-        Model.Customer IRepo.GetCustomer(int ID)
-        {
-            // Can I just call the get all customers method?
-            List<Model.Customer> allCustos = _context.Customers.Select(
-                customer => new Model.Customer() {
-                    Id = customer.Id,
-                    Name = customer.Name,
-                    // Orders = customer.Orders,
-                    // Inventory = customer.Inventory,
-                    Credit = (int) customer.Credit,
-                    StoreFrontID = (int) customer.StoreFrontId,
-                    hasDefaultStore = (int) customer.HasDefaultStore
-                }
-            ).ToList();
-
-            foreach (Model.Customer check in allCustos)
-            {
-                if (check.Id == ID)
-                {
-                    return check;
-                }
-            }
-            return null;
-        }
         public List<Model.Inventory> GetInventory(int store)
         {
             // grab all the Inventories
@@ -233,43 +223,118 @@ namespace DL
 
             List<Model.Inventory> allInventories = _context.Inventories.Select(
                 inventory => new Model.Inventory() {
+                    Id = inventory.Id,
                     ProductId = inventory.ProductId,
                     StoreFrontId = inventory.StoreId,
                     Quantity = inventory.Quantity
-                }
-            ).ToList();
+                        }
+                    ).ToList();
 
             List<Model.Product> allProducts = _context.Products.Select(
                         product => new Model.Product() {
+                            Id = product.Id,
                             Name = product.Name,
                             Price = product.Price,
                             Description = product.Description
                         }
                     ).ToList();
 
-            List<Model.StoreFront> allStores = _context.StoreFronts.Select(
-                        store => new Model.StoreFront() {
-                            Id = store.Id,
-                            Name = store.Name
-                        }
-                    ).ToList();
+            List<Model.Inventory> storeInventory = new List<Model.Inventory>();
 
-            List<Model.Inventory> readableInventory = new List<Model.Inventory>();
+            var temp = from m1 in allInventories
+                join m2 in allProducts on m1.ProductId equals m2.Id
+                select new {m1.Id, m1.ProductId, m2.Name, m1.StoreFrontId, m1.Quantity};
 
-            Model.Inventory newEntry = new Model.Inventory();
-
-            foreach (Model.Inventory inventoryLine in allInventories)
+            foreach (var item in temp)
             {
-                // SKIP any Inventory object which does not have Inventory.StoreFrontID = activeStore.Id (store)
-                if(inventoryLine.StoreFrontId != store) continue;
-
-                // Combine the Product and Quantity into a readable format. 
-                newEntry.Product = allProducts[inventoryLine.ProductId].Name;
-                newEntry.Quantity = inventoryLine.Quantity;
-                readableInventory.Add(newEntry);
+                if (item.StoreFrontId == store)
+                {
+                    Model.Inventory newEntry = new Model.Inventory();
+                    newEntry.Id = item.Id;
+                    newEntry.ProductId = item.ProductId;
+                    newEntry.StoreFrontId = item.StoreFrontId;
+                    newEntry.Product = item.Name;
+                    newEntry.Quantity = item.Quantity;
+                    storeInventory.Add(newEntry);
+                }
             }
 
-            return readableInventory;
+            return storeInventory;
+        }
+        public List<Model.Inventory> UpdateInventory(List<Model.Inventory> inventoryToUpdate)
+        {
+            foreach (Model.Inventory item in inventoryToUpdate)
+            {
+                Entities.Inventory updatedInventory = (from i in _context.Inventories
+                    where i.Id == item.Id
+                    select i).SingleOrDefault();
+
+                updatedInventory.Quantity = item.Quantity;
+            }
+
+            _context.SaveChanges();
+
+            return inventoryToUpdate;
+        }
+
+        // [[ORDERS]]
+        public List<Model.Orders> GetAllOrders()
+        {
+            return _context.Orders.Select(
+                order => new Model.Orders() {
+                    Id = order.Id,
+                    CustomerId = order.CustomerId,
+                    Date = order.Date,
+                    Total = (int) order.Total
+                }
+            ).ToList();
+        }
+        public Model.Orders AddOrder(Model.Orders order)
+        {
+            Entity.Order orderToAdd = new Entity.Order(){
+                CustomerId = order.CustomerId,
+                Date = order.Date,
+                Total = order.Total
+            };
+
+            _context.Add(orderToAdd);
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+
+            return order;
+        }
+
+        // [[LINE ITEMS]]
+        public List<Model.LineItem> AddLineItem(List<Model.LineItem> lineitemList)
+        {
+            List<Entity.LineItem> linesToAdd = new List<Entity.LineItem>();
+
+            foreach (Model.LineItem lineitem in lineitemList)
+            {
+                // Entity.LineItem lineitemToAdd = new Entity.LineItem(){
+                //     Id = lineitem.Id,
+                //     OrderId = lineitem.OrderId,
+                //     InventoryId = lineitem.InventoryId,
+                //     Quantity = lineitem.Quantity
+                // };
+
+                List<Entity.LineItem> lineitemToAdd = lineitemList.Select(i => new Entity.LineItem(){
+                Id = i.Id,
+                OrderId = i.OrderId,
+                InventoryId = i.InventoryId,
+                Quantity = i.Quantity}).ToList();
+
+                // linesToAdd.Add(lineitemToAdd);
+
+                // _context.Add(lineitemToAdd);
+                // _context.SaveChanges();
+                // _context.ChangeTracker.Clear();
+            }
+
+            _context.LineItems.AddRange(linesToAdd);
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+            return lineitemList;
         }
     }
 }

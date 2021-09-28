@@ -24,5 +24,13 @@ namespace DL
         // Inventory
         Inventory AddInventory(Inventory inventory);
         List<Inventory> GetInventory(int store);
+        List<Inventory> UpdateInventory(List<Inventory> ordersToUpdate);
+        
+        // Orders
+        List<Orders> GetAllOrders();
+        Orders AddOrder(Orders order);
+
+        // Line Items
+        List<LineItem> AddLineItem(List<LineItem> lineitem);
     }
 }

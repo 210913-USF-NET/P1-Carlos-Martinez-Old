@@ -10,7 +10,6 @@ namespace DL.Entities
         public Product()
         {
             Inventories = new HashSet<Inventory>();
-            LineItems = new HashSet<LineItem>();
         }
 
         public int Id { get; set; }
@@ -19,6 +18,5 @@ namespace DL.Entities
         public string Description { get; set; }
 
         public virtual ICollection<Inventory> Inventories { get; set; }
-        public virtual ICollection<LineItem> LineItems { get; set; }
     }
 }

@@ -22,5 +22,16 @@ namespace BL
         // Inventories
         List<Inventory> GetInventory(int store);
         Inventory AddInventory(Inventory inventory);
+        List<Inventory> UpdateInventory(List<Inventory> ordersToUpdate);
+
+        // Orders
+        List<Orders> GetAllOrders();
+        Orders AddOrder(Orders order);
+
+        // Line Items
+        List<LineItem> AddLineItem(List<LineItem> lineitem);
+
+        // Special
+        
     }
 }

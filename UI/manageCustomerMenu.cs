@@ -27,10 +27,10 @@ namespace UI
                 if (activeCustomer == null) Console.WriteLine("No active customer, please select a customer first.");
                 else Console.WriteLine($"Current active customer: {activeCustomer.Name}"); // should display active customer by name. 
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("0- View Order History");
-                Console.WriteLine("1- Give Credit");
-                Console.WriteLine("2- Select Customer");
-                Console.WriteLine("x- Exit");
+                Console.WriteLine("[0] View Order History");
+                Console.WriteLine("[1] Give Credit");
+                Console.WriteLine("[2] Select Customer");
+                Console.WriteLine("[x] Exit");
                 Console.WriteLine("Input: ");
                 
                 switch(Console.ReadLine())
@@ -42,6 +42,7 @@ namespace UI
                             Console.WriteLine("Please select a customer first.");
                             break;
                         }
+                        Console.WriteLine("Not yet implemented.");
                         break;
                         
                     case "1": 
@@ -53,7 +54,7 @@ namespace UI
                         }
 
                         getPrice:
-                        Console.Write("How much credit would you like to give them?");
+                        Console.Write("How much credit would you like to give them? ");
                         input = Console.ReadLine();
                         parseSuccess = int.TryParse(input, out parsedInput);
                         if (parseSuccess && parsedInput >= 0)

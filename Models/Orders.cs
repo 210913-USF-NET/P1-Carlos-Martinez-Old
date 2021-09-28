@@ -5,6 +5,7 @@ namespace Models
 {
     public class Orders
     {
+        public Orders() {}
         public Orders(int CID)
         {
             this.CustomerId = CID;

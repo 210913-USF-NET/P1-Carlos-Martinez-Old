@@ -63,5 +63,23 @@ namespace BL
         {
             return _repo.GetInventory(store);
         }
+        public List<Inventory> UpdateInventory(List<Inventory> ordersToUpdate)
+        {
+            return _repo.UpdateInventory(ordersToUpdate);
+        }
+
+        public List<Orders> GetAllOrders()
+        {
+            return _repo.GetAllOrders();
+        }
+
+        public Orders AddOrder(Orders order)
+        {
+            return _repo.AddOrder(order);
+        }
+        public List<LineItem> AddLineItem(List<LineItem> lineitem)
+        {
+            return _repo.AddLineItem(lineitem);
+        }
     }
 }
