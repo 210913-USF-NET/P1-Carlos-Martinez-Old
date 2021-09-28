@@ -14,12 +14,11 @@ namespace UI
         {
             _bl = bl;
         }
-        commonMethods _CMinstance = new commonMethods();
-
+        
         public void Start()
         {
             Console.WriteLine("\nEnter your unique ID: ");
-            int input = _CMinstance.convertString(Console.ReadLine(), 0);
+            int input = _bl.convertString(Console.ReadLine(), 0);
             if (input == -1)
             {
                 Console.WriteLine("ID not found. Returning to main menu.");
@@ -122,10 +121,7 @@ namespace UI
                 Console.WriteLine("You have a past due balance of");
             }
 
-            // Current Goal: 
-            // Refactor this into different calls to BL. 
-
-            Orders currentOrder = new Orders(custo.Id);
+            Orders currentOrder = new Orders(custo.Id, store.Id);
             currentOrder.Id = _bl.GetAllOrders().Count;
 
             int runningTotal = 0;
@@ -191,8 +187,8 @@ namespace UI
                         }
                     }
 
-                    if (item.Quantity == 0) Console.WriteLine($"[{i}] {item.Name}: Out of Stock");
-                    else Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {item.Quantity} available, {item.Description})");
+                    if (quantity == 0) Console.WriteLine($"[{i}] {item.Name}: Out of Stock");
+                    else Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {quantity} available, {item.Description})");
                     i++;
                 }
                 Console.WriteLine("[x] Exit or Checkout");
@@ -206,7 +202,7 @@ namespace UI
                     break;
                 }
 
-                int parsedInt = _CMinstance.convertString(input, 0, joinedInventory.Count-1);
+                int parsedInt = _bl.convertString(input, 0, joinedInventory.Count-1);
 
                 if (parsedInt == -1)
                 {
@@ -222,7 +218,7 @@ namespace UI
                 quantity:
                 Console.Write($"How many {joinedInventory[parsedInt].Name}(s) do you want? \nThere are {joinedInventory[parsedInt].Quantity} available. ");
                 input = Console.ReadLine();
-                int amount = _CMinstance.convertString(input, 1);
+                int amount = _bl.convertString(input, 1);
 
                 if (amount == -1)
                 {
@@ -233,7 +229,7 @@ namespace UI
                     Console.WriteLine($"You are limited to buying {joinedInventory[parsedInt].Quantity} currently.");
                     amount = joinedInventory[parsedInt].Quantity;
                 }
-                LineItem currentItem = new LineItem(currentOrder.Id, joinedInventory[parsedInt].Id, amount);
+                LineItem currentItem = new LineItem(currentOrder.Id, parsedInt, amount);
                 LineItemHolder.Add(currentItem);
                 runningTotal = runningTotal + (amount * joinedInventory[parsedInt].Price);
                 joinedInventory currentInv = new joinedInventory(joinedInventory[parsedInt]);
@@ -304,12 +300,10 @@ namespace UI
 
             foreach (joinedInventory item in LineItemInfo)
             {
-                Console.WriteLine($"item id: {item.Id} for {item.Name}");
                 // This needs to be fixed. 
                 foreach (Inventory itemToUpdate in storeInventory)
                 {
                     // itemToUpdate.Id is the INVENTORY ID. 
-                    Console.WriteLine($"\titemToUpdate: {itemToUpdate.Id} for {itemToUpdate.ProductId} AKA {itemToUpdate.Product}");
                     if (itemToUpdate.Id == item.Id)
                     {
                         Console.WriteLine("\t\t***");

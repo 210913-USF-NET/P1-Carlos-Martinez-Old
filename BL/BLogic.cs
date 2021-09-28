@@ -77,9 +77,70 @@ namespace BL
         {
             return _repo.AddOrder(order);
         }
+        public List<Orders> getOrderHistory(int custoId)
+        {
+            return _repo.getOrderHistory(custoId);
+        }
         public List<LineItem> AddLineItem(List<LineItem> lineitem)
         {
             return _repo.AddLineItem(lineitem);
+        }
+
+        public List<LineItem> GetLineItembyOrderID(int ID)
+        {
+            return _repo.GetLineItembyOrderID(ID);
+        }
+
+        public List<Orders> orderList(int activeCustomerId, string choice)
+        {
+            orderComparer comparer = new orderComparer();
+            List<Orders> custoOrders = _repo.getOrderHistory(activeCustomerId);
+
+            // DA is DATE ASCENDING, DD is DATE DESCENDING
+            // TA is TOTAL ASCENDING, TD is TOTAL DESCENDING
+            if (choice.Equals("DA"))
+                custoOrders.Sort(comparer.ComparebyAscDate);
+            else if (choice.Equals("TA"))
+                custoOrders.Sort(comparer.ComparebyAscTotal);
+            if (choice.Equals("DD"))
+                custoOrders.Sort(comparer.ComparebyDesDate);
+            else if (choice.Equals("TD"))
+                custoOrders.Sort(comparer.ComparebyDesTotal);
+
+            return custoOrders;
+        }
+
+        public int convertString(string entry, int min, int max)
+        {
+            bool parseSuccess;
+            int parsedInput;
+
+            parseSuccess = int.TryParse(entry, out parsedInput);
+            if (parseSuccess && parsedInput >= min && parsedInput <= max)
+            {
+                return parsedInput;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        
+        // same method, without a max value. 
+        public int convertString(string entry, int min)
+        {
+            bool parseSuccess;
+            int parsedInput;
+
+            parseSuccess = int.TryParse(entry, out parsedInput);
+            if (parseSuccess && parsedInput >= min)
+            {
+                return parsedInput;
+            }
+            else
+            {
+                return -1;
+            }
         }
     }
 }

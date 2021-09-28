@@ -11,6 +11,7 @@ namespace DL.Entities
         {
             Customers = new HashSet<Customer>();
             Inventories = new HashSet<Inventory>();
+            Orders = new HashSet<Order>();
         }
 
         public int Id { get; set; }
@@ -18,5 +19,6 @@ namespace DL.Entities
 
         public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Inventory> Inventories { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

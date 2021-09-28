@@ -14,8 +14,6 @@ namespace UI
             _bl = bl;
         }
 
-        private commonMethods CM = new commonMethods();
-
         public void Start()
         {
             bool exit = false;
@@ -89,7 +87,7 @@ namespace UI
                         Console.Write("Which product would you like to add? ");
 
                         entry = Console.ReadLine();
-                        parsedInput = CM.convertString(entry, 0, allProducts.Count+1);
+                        parsedInput = _bl.convertString(entry, 0, allProducts.Count+1);
 
                         if (parsedInput == -1)
                         {
@@ -100,7 +98,7 @@ namespace UI
                         {
                             Console.Write("How many would you like to add? ");
                             entry = Console.ReadLine();
-                            quantity = CM.convertString(entry, 0);
+                            quantity = _bl.convertString(entry, 0);
                             if (quantity == -1)
                             {
                                 Console.WriteLine("Please enter a valid number. Returning to store manager menu.");

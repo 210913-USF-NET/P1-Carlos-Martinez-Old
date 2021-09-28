@@ -30,7 +30,10 @@ namespace DL
         List<Orders> GetAllOrders();
         Orders AddOrder(Orders order);
 
+        List<Orders> getOrderHistory(int custoId);
+
         // Line Items
         List<LineItem> AddLineItem(List<LineItem> lineitem);
+        List<LineItem> GetLineItembyOrderID(int ID);
     }
 }

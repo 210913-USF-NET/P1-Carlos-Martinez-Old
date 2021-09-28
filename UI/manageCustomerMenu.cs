@@ -2,6 +2,7 @@ using BL;
 using System;
 using Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UI
 {
@@ -21,6 +22,7 @@ namespace UI
             int parsedInput;
             bool parseSuccess;
             Customer activeCustomer = null;
+
             do
             {
                 Console.WriteLine("\nManaging customers...");
@@ -36,13 +38,78 @@ namespace UI
                 switch(Console.ReadLine())
                 {
                     case "0": 
-                        // NYI, View Order History
+                        // View Order History
                         if (activeCustomer == null)
                         {
                             Console.WriteLine("Please select a customer first.");
                             break;
                         }
-                        Console.WriteLine("Not yet implemented.");
+
+                        string choice = "";
+
+                        chooseOrder:
+                        Console.Write("Would you like the orders by [D]ate or [T]otal? ");
+                        switch(Char.ToUpper(Console.ReadLine()[0]))
+                        {
+                            case 'D':
+                                // they want it by DATE
+                                choice = choice + "D";
+                                break; 
+                            case 'T': 
+                                // they want it by TOTAL
+                                choice = choice + "T";
+                                break; 
+                            default: 
+                                // they fucked up!
+                                Console.WriteLine("Please input a proper response.");
+                                goto chooseOrder;
+                        }
+
+                        AscOrDes: 
+                        Console.Write("Would you like the orders in [A]scending or [D]escending order? ");
+                        switch(Char.ToUpper(Console.ReadLine()[0]))
+                        {
+                            case 'A':
+                                // they want it by ASCENDING
+                                choice = choice + "A";
+                                break; 
+                            case 'D': 
+                                // they want it by DESCENDING
+                                choice = choice + "D";
+                                break; 
+                            default: 
+                                // they fucked up!
+                                Console.WriteLine("Please input a proper response.");
+                                goto AscOrDes;
+                        }
+
+                        List<Orders> custoOrders = _bl.orderList(activeCustomer.Id, choice);
+                        List<StoreFront> allStores = _bl.GetAllStoreFronts();
+                        List<Product> allProducts = _bl.GetAllProducts();
+
+                        List<List<LineItem>> custoLineItems = new List<List<LineItem>>();
+                        foreach (Orders item in custoOrders)
+                        {
+                            List<LineItem> LineItemsbyOrder = _bl.GetLineItembyOrderID(item.Id);
+                            custoLineItems.Add(LineItemsbyOrder);
+                        }
+
+                        for (int i = 0; i < custoOrders.Count; i++)
+                        {
+                            Console.WriteLine($"On {custoOrders[i].Date.ToString("g")}, at {allStores[custoOrders[i].StoreFrontId].Name}, they paid {custoOrders[i].Total} gold coins for:");
+                            foreach (LineItem lineitem in custoLineItems[i])
+                            {
+                                Console.WriteLine($" * {allProducts[lineitem.ProductId].Name} x{lineitem.Quantity}");
+                            }
+                            // can insert a readline command to wait for user input. 
+                            // can have it show up every five orders, so the user isn't flooded. 
+                            // can have it read the input and, if x, doesn't stop anymore. 
+                        }
+                        
+                        // wait for the user to continue. 
+                        Console.Write("press enter to continue...");
+                        Console.ReadLine();
+
                         break;
                         
                     case "1": 

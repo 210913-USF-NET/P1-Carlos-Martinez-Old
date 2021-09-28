@@ -55,35 +55,6 @@ namespace UI
                         // Send them to the customer menu
                         MenuFactory.GetMenu("customer").Start();
                         break;
-
-                    case "4":
-                        // TEST
-                        // var tempInventory = from m1 in storeInventory
-                        //     join m2 in allProducts on m1.ProductId equals m2.Id
-                        //     select new {m1.Id, m2.Name, m1.Quantity, m2.Price, m2.Description};
-                        commonMethods CM = new commonMethods();
-
-                        bla:
-                        string NameGiven = Console.ReadLine();
-                        int Credit = CM.convertString(Console.ReadLine(),0);
-                        int StoreFrontId = CM.convertString(Console.ReadLine(),0);
-                        
-                        List<Customer> allCustomers = _bl.GetAllCustomers();
-                        for (int i = 0; i < allCustomers.Count; i++)
-                        {
-                            if (allCustomers[i].Name == NameGiven && allCustomers[i].Credit == Credit && allCustomers[i].StoreFrontID == StoreFrontId)
-                            {
-                            // they find all three!
-                            Console.WriteLine("Got it!");
-                            }
-                            else 
-                            {
-                                Console.WriteLine("Try again!");
-                                goto bla;
-                            }
-                        }
-
-                        break;
                     
                     case "x":
                         // Leave

@@ -22,7 +22,8 @@ namespace DL
         // [[CUSTOMERS]]
         public Model.Customer AddCustomer(Model.Customer custo)
         {
-            Entity.Customer custoToAdd = new Entity.Customer(){
+            Entity.Customer custoToAdd = new Entity.Customer()
+            {
                 Name = custo.Name,
                 Credit = custo.Credit
             };
@@ -39,7 +40,8 @@ namespace DL
             // Gets Entities.Customer
             // and converts to Model.Customer
             return _context.Customers.Select(
-                customer => new Model.Customer() {
+                customer => new Model.Customer()
+                {
                     Id = customer.Id,
                     Name = customer.Name,
                     // Orders = customer.Orders,
@@ -49,12 +51,11 @@ namespace DL
                 }
             ).ToList();
         }
-
         public Model.Customer UpdateCustomer(Model.Customer customerToUpdate)
         {
             Entities.Customer updatedCust = (from c in _context.Customers
-                where c.Id == customerToUpdate.Id
-                select c).SingleOrDefault();
+                                             where c.Id == customerToUpdate.Id
+                                             select c).SingleOrDefault();
 
             updatedCust.Credit = customerToUpdate.Credit;
             updatedCust.HasDefaultStore = customerToUpdate.hasDefaultStore;
@@ -81,14 +82,15 @@ namespace DL
         {
             // Can I just call the get all customers method?
             List<Model.Customer> allCustos = _context.Customers.Select(
-                customer => new Model.Customer() {
+                customer => new Model.Customer()
+                {
                     Id = customer.Id,
                     Name = customer.Name,
                     // Orders = customer.Orders,
                     // Inventory = customer.Inventory,
-                    Credit = (int) customer.Credit,
-                    StoreFrontID = (int) customer.StoreFrontId,
-                    hasDefaultStore = (int) customer.HasDefaultStore
+                    Credit = (int)customer.Credit,
+                    StoreFrontID = (int)customer.StoreFrontId,
+                    hasDefaultStore = (int)customer.HasDefaultStore
                 }
             ).ToList();
 
@@ -101,11 +103,12 @@ namespace DL
             }
             return null;
         }
-        
+
         // [PRODUCTS]
         public Model.Product AddProduct(Model.Product product)
         {
-            Entity.Product prodToAdd = new Entity.Product(){
+            Entity.Product prodToAdd = new Entity.Product()
+            {
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description
@@ -120,7 +123,8 @@ namespace DL
         public List<Model.Product> GetAllProducts()
         {
             return _context.Products.Select(
-                product => new Model.Product() {
+                product => new Model.Product()
+                {
                     Name = product.Name,
                     Price = product.Price,
                     Description = product.Description
@@ -131,7 +135,8 @@ namespace DL
         // [[STOREFRONTS]]
         public Model.StoreFront AddStoreFront(Model.StoreFront store)
         {
-            Entity.StoreFront storeToAdd = new Entity.StoreFront(){
+            Entity.StoreFront storeToAdd = new Entity.StoreFront()
+            {
                 Name = store.Name,
                 // Inventories = store.Inventories
             };
@@ -145,7 +150,8 @@ namespace DL
         public Model.StoreFront GetStoreFront(int ID)
         {
             List<Model.StoreFront> allStores = _context.StoreFronts.Select(
-                store => new Model.StoreFront() {
+                store => new Model.StoreFront()
+                {
                     Id = store.Id,
                     Name = store.Name,
                     // Orders = customer.Orders,
@@ -167,7 +173,8 @@ namespace DL
         public List<Model.StoreFront> GetAllStoreFronts()
         {
             return _context.StoreFronts.Select(
-                store => new Model.StoreFront() {
+                store => new Model.StoreFront()
+                {
                     Id = store.Id,
                     Name = store.Name
                 }
@@ -177,7 +184,8 @@ namespace DL
         // [[INVENTORY]]
         public Model.Inventory AddInventory(Model.Inventory inventory)
         {
-            Entity.Inventory invToAdd = new Entity.Inventory(){
+            Entity.Inventory invToAdd = new Entity.Inventory()
+            {
                 StoreId = inventory.StoreFrontId,
                 ProductId = inventory.ProductId,
                 Quantity = inventory.Quantity
@@ -195,7 +203,8 @@ namespace DL
             }
 
             // Update the quantity in the DB instead of adding a brand new one. 
-            if (check != 0) {
+            if (check != 0)
+            {
                 // UPDATE
                 string queryString = $"UPDATE Inventory SET Quantity = @quant WHERE StoreId = @SID AND ProductId = @PID;";
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -222,16 +231,18 @@ namespace DL
             // cycle through them until I find the store ID
 
             List<Model.Inventory> allInventories = _context.Inventories.Select(
-                inventory => new Model.Inventory() {
+                inventory => new Model.Inventory()
+                {
                     Id = inventory.Id,
                     ProductId = inventory.ProductId,
                     StoreFrontId = inventory.StoreId,
                     Quantity = inventory.Quantity
-                        }
+                }
                     ).ToList();
 
             List<Model.Product> allProducts = _context.Products.Select(
-                        product => new Model.Product() {
+                        product => new Model.Product()
+                        {
                             Id = product.Id,
                             Name = product.Name,
                             Price = product.Price,
@@ -242,8 +253,8 @@ namespace DL
             List<Model.Inventory> storeInventory = new List<Model.Inventory>();
 
             var temp = from m1 in allInventories
-                join m2 in allProducts on m1.ProductId equals m2.Id
-                select new {m1.Id, m1.ProductId, m2.Name, m1.StoreFrontId, m1.Quantity};
+                       join m2 in allProducts on m1.ProductId equals m2.Id
+                       select new { m1.Id, m1.ProductId, m2.Name, m1.StoreFrontId, m1.Quantity };
 
             foreach (var item in temp)
             {
@@ -266,8 +277,8 @@ namespace DL
             foreach (Model.Inventory item in inventoryToUpdate)
             {
                 Entities.Inventory updatedInventory = (from i in _context.Inventories
-                    where i.Id == item.Id
-                    select i).SingleOrDefault();
+                                                       where i.Id == item.Id
+                                                       select i).SingleOrDefault();
 
                 updatedInventory.Quantity = item.Quantity;
             }
@@ -281,18 +292,21 @@ namespace DL
         public List<Model.Orders> GetAllOrders()
         {
             return _context.Orders.Select(
-                order => new Model.Orders() {
+                order => new Model.Orders()
+                {
                     Id = order.Id,
                     CustomerId = order.CustomerId,
                     Date = order.Date,
-                    Total = (int) order.Total
+                    Total = (int)order.Total
                 }
             ).ToList();
         }
         public Model.Orders AddOrder(Model.Orders order)
         {
-            Entity.Order orderToAdd = new Entity.Order(){
+            Entity.Order orderToAdd = new Entity.Order()
+            {
                 CustomerId = order.CustomerId,
+                StoreFrontId = order.StoreFrontId,
                 Date = order.Date,
                 Total = order.Total
             };
@@ -303,28 +317,46 @@ namespace DL
 
             return order;
         }
+        public List<Model.Orders> getOrderHistory(int custoId)
+        {
+            List<Model.Orders> allOrders = GetAllOrders();
+            List<Model.Orders> custoOrders = new List<Model.Orders>();
+            
+            foreach (Model.Orders order in allOrders)
+            {
+                if (order.CustomerId == custoId)
+                {
+                    custoOrders.Add(order);
+                }
+            }
+
+            return custoOrders;
+        }
 
         // [[LINE ITEMS]]
         public List<Model.LineItem> AddLineItem(List<Model.LineItem> lineitemList)
         {
+            Console.WriteLine("We got into here.");
             List<Entity.LineItem> linesToAdd = new List<Entity.LineItem>();
-
+            
             foreach (Model.LineItem lineitem in lineitemList)
             {
-                // Entity.LineItem lineitemToAdd = new Entity.LineItem(){
-                //     Id = lineitem.Id,
-                //     OrderId = lineitem.OrderId,
-                //     InventoryId = lineitem.InventoryId,
-                //     Quantity = lineitem.Quantity
-                // };
+                Entity.LineItem lineitemToAdd = new Entity.LineItem(){
+                    Id = lineitem.Id,
+                    OrderId = lineitem.OrderId,
+                    ProductId = lineitem.ProductId,
+                    Quantity = lineitem.Quantity
+                };
 
-                List<Entity.LineItem> lineitemToAdd = lineitemList.Select(i => new Entity.LineItem(){
-                Id = i.Id,
-                OrderId = i.OrderId,
-                InventoryId = i.InventoryId,
-                Quantity = i.Quantity}).ToList();
+                // Entity.LineItem lineitemToAdd = lineitem.Select(i => new Entity.LineItem()
+                // {
+                //     Id = i.Id,
+                //     OrderId = i.OrderId,
+                //     ProductId = i.ProductId,
+                //     Quantity = i.Quantity
+                // }).ToList();
 
-                // linesToAdd.Add(lineitemToAdd);
+                linesToAdd.Add(lineitemToAdd);
 
                 // _context.Add(lineitemToAdd);
                 // _context.SaveChanges();
@@ -335,6 +367,17 @@ namespace DL
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
             return lineitemList;
+        }
+        public List<Model.LineItem> GetLineItembyOrderID(int ID)
+        {
+            return _context.LineItems.Where(i => i.OrderId == ID).Select(
+                lineitem => new Model.LineItem()
+                {
+                    OrderId = lineitem.OrderId,
+                    ProductId = lineitem.ProductId,
+                    Quantity = lineitem.Quantity
+                }
+            ).ToList();
         }
     }
 }
