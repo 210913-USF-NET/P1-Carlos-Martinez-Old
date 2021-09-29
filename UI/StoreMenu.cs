@@ -30,7 +30,6 @@ namespace UI
                 Console.WriteLine("ID not found. Returning to main menu.");
                 return;
             }
-            Console.WriteLine(custo);
 
             // Check default store. 
             StoreFront activeStore = new StoreFront();
@@ -65,10 +64,9 @@ namespace UI
             {
                 Console.WriteLine($"\nWelcome to {activeStore.Name}!");
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("[0] Add Product to Shopping Cart");
-                Console.WriteLine("[1] Change Store");
-                Console.WriteLine("[2] Check Shopping Cart");
-                Console.WriteLine("[x] Exit");
+                Console.WriteLine("   [0] Add Product to Shopping Cart");
+                Console.WriteLine("   [1] Change Store");
+                Console.WriteLine("   [x] Return to main menu");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -80,7 +78,7 @@ namespace UI
 
                     case "1": 
                         // Change Store
-                        Console.WriteLine("Searching for all stores...");
+                        Console.WriteLine("\nSearching for all stores...");
 
                         manageStoresMenu _instance = new manageStoresMenu(_bl);
                         activeStore = _instance.selectStore();
@@ -97,12 +95,6 @@ namespace UI
                             break;
                         }
 
-                    case "2": 
-                        // Check Order
-                          // Checkout, Remove Product from Order
-                          // Should I make a switch inside the switch or send it over to a new menu?
-                        break; 
-
                     case "x": 
                         exit = true;
                         break;
@@ -114,11 +106,14 @@ namespace UI
         {
             if (custo.Credit == 0)
             {
-                Console.WriteLine("You have no credit. Please add some before shopping.");
+                Console.WriteLine("\nYou have no credit. Please add some before shopping.");
+                return;
             }
             else if (custo.Credit < 0)
             {
-                Console.WriteLine("You have a past due balance of");
+                Console.WriteLine($"\nYou have a past due balance of {custo.Credit} gold coins.");
+                Console.WriteLine("Please return to a positive balance before browsing.");
+                return;
             }
 
             Orders currentOrder = new Orders(custo.Id, store.Id);
@@ -170,6 +165,7 @@ namespace UI
                 // [0] Axe (5 gp, description);
                 int i = 0;
                 int quantity = 0;
+                Console.WriteLine("");
                 foreach (joinedInventory item in joinedInventory)
                 {
                     // If each item in the store's inventory has any quantity, 
@@ -187,11 +183,11 @@ namespace UI
                         }
                     }
 
-                    if (quantity == 0) Console.WriteLine($"[{i}] {item.Name}: Out of Stock");
-                    else Console.WriteLine($"[{i}] {item.Name} ({item.Price} gp, {quantity} available, {item.Description})");
+                    if (quantity == 0) Console.WriteLine($"   [{i}] {item.Name}: Out of Stock");
+                    else Console.WriteLine($"   [{i}] {item.Name} ({item.Price} gp, {quantity} available, {item.Description})");
                     i++;
                 }
-                Console.WriteLine("[x] Exit or Checkout");
+                Console.WriteLine("   [x] Exit or Checkout");
 
                 // next: Get customer input. 
                 command:
@@ -306,7 +302,6 @@ namespace UI
                     // itemToUpdate.Id is the INVENTORY ID. 
                     if (itemToUpdate.Id == item.Id)
                     {
-                        Console.WriteLine("\t\t***");
                         itemToUpdate.Quantity -= item.Quantity;
                     }
                 }

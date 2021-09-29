@@ -28,6 +28,7 @@ namespace BL
         List<Orders> GetAllOrders();
         Orders AddOrder(Orders order);
         List<Orders> getOrderHistory(int custoId);
+        List<Orders> storeOrders(int storeOrderId);
 
         // Line Items
         List<LineItem> AddLineItem(List<LineItem> lineitem);
@@ -37,6 +38,5 @@ namespace BL
         List<Orders> orderList(int activeCustomerId, string choice);
         int convertString(string entry, int min, int max);
         int convertString(string entry, int min);
-
     }
 }

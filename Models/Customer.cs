@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Serilog;
 
 namespace Models
 {
@@ -20,7 +19,28 @@ namespace Models
 
         // properties
         public int Id { get; set; }
-        public string Name { get; set; }
+        private string _name;
+        public string Name 
+        { 
+            get
+            {
+                return _name;
+            }
+
+            set
+            {
+                if (value.Length == 0)
+                {
+                    InputInvalidException e = new InputInvalidException("Terminating program. We require names to be at least one character long.");
+                    Log.Warning(e.Message);
+                    throw e;
+                }
+                else
+                {
+                    _name = value;
+                }
+            }
+        }
         public int Credit { get; set; }
         public int StoreFrontID { get; set; }
         public int hasDefaultStore { get; set; }

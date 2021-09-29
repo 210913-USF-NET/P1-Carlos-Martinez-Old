@@ -5,12 +5,14 @@ namespace Models
 {
     public class Orders
     {
-        public Orders() {}
-        public Orders(int CID, int SID)
+        public Orders()
+        {
+            this.Date = DateTime.Now;
+        }
+        public Orders(int CID, int SID) : this()
         {
             this.CustomerId = CID;
             this.StoreFrontId = SID;
-            this.Date = DateTime.Now;
         }
         public int Id { get; set; }
         public int CustomerId { get; set; }

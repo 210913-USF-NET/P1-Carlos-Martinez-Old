@@ -110,6 +110,22 @@ namespace BL
             return custoOrders;
         }
 
+        public List<Orders> storeOrders(int storeOrderId)
+        {
+            List<Orders> allOrders = _repo.GetAllOrders();
+            List<Orders> storeOrders = new List<Orders>();
+
+            foreach (Orders item in allOrders)
+            {
+                if (item.StoreFrontId == storeOrderId)
+                {
+                    storeOrders.Add(item);
+                }
+            }
+
+            return storeOrders;
+        }
+
         public int convertString(string entry, int min, int max)
         {
             bool parseSuccess;

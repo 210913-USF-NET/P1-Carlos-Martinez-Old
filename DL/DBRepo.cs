@@ -22,6 +22,10 @@ namespace DL
         // [[CUSTOMERS]]
         public Model.Customer AddCustomer(Model.Customer custo)
         {
+            /// <summary>
+            /// Adds a new customer to the Database, then saves the Database. 
+            /// </summary>
+            
             Entity.Customer custoToAdd = new Entity.Customer()
             {
                 Name = custo.Name,
@@ -36,9 +40,10 @@ namespace DL
         }
         public List<Model.Customer> GetAllCustomers()
         {
-            // select * from Customers in SQL Query
-            // Gets Entities.Customer
-            // and converts to Model.Customer
+            /// <summary>
+            /// Returns every customer available to the system. 
+            /// </summary>
+            
             return _context.Customers.Select(
                 customer => new Model.Customer()
                 {
@@ -296,6 +301,7 @@ namespace DL
                 {
                     Id = order.Id,
                     CustomerId = order.CustomerId,
+                    StoreFrontId = order.StoreFrontId,
                     Date = order.Date,
                     Total = (int)order.Total
                 }
@@ -336,7 +342,6 @@ namespace DL
         // [[LINE ITEMS]]
         public List<Model.LineItem> AddLineItem(List<Model.LineItem> lineitemList)
         {
-            Console.WriteLine("We got into here.");
             List<Entity.LineItem> linesToAdd = new List<Entity.LineItem>();
             
             foreach (Model.LineItem lineitem in lineitemList)

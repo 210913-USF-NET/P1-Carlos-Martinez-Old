@@ -41,10 +41,10 @@ namespace UI
             {
                 Console.WriteLine($"\nWelcome {custo.Name}!");
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("[0] View Past Orders");
-                Console.WriteLine("[1] Change Default Store");
-                Console.WriteLine("[2] Buy Credit");
-                Console.WriteLine("[x] Exit");
+                Console.WriteLine("   [0] View Past Orders");
+                Console.WriteLine("   [1] Change Default Store");
+                Console.WriteLine("   [2] Buy Credit");
+                Console.WriteLine("   [x] Return to main menu");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -94,6 +94,11 @@ namespace UI
                         List<StoreFront> allStores = _bl.GetAllStoreFronts();
                         List<Product> allProducts = _bl.GetAllProducts();
 
+                        if(custoOrders.Count == 0)
+                        {
+                            Console.WriteLine("You have no history.");
+                        }
+
                         List<List<LineItem>> custoLineItems = new List<List<LineItem>>();
                         foreach (Orders item in custoOrders)
                         {
@@ -130,7 +135,7 @@ namespace UI
                         getStore: 
                         for (int i = 0; i < allRestos.Count; i++) 
                         {
-                            Console.WriteLine($"[{i}] {allRestos[i].Name}");
+                            Console.WriteLine($"   [{i}] {allRestos[i].Name}");
                         }
                         
                         Console.Write("Which store would you like to set? ");
@@ -161,7 +166,7 @@ namespace UI
                         parseSuccess = int.TryParse(input, out parsedInput);
                         if (parseSuccess && parsedInput >= 0)
                         {
-                            Console.WriteLine("\nAdding Credit.");                        
+                            Console.WriteLine("\nAdding credit...");                        
                             custo.Credit += parsedInput;
                         }
                         else

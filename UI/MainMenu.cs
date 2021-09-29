@@ -1,7 +1,7 @@
 using System;
 using Models;
 using BL;
-using DL;
+using Serilog;
 using System.Collections.Generic;
 
 namespace UI
@@ -18,13 +18,14 @@ namespace UI
             bool exit = false;
             do
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("\nWelcome to the Emporium!");
                 Console.WriteLine("Have you shopped with us before?");
-                Console.WriteLine("[0] Yes");
-                Console.WriteLine("[1] No");
-                Console.WriteLine("[2] Management");
-                Console.WriteLine("[3] Customer Profile");
-                Console.WriteLine("[x] Exit");
+                Console.WriteLine("   [0] Yes");
+                Console.WriteLine("   [1] No");
+                Console.WriteLine("   [2] Management");
+                Console.WriteLine("   [3] Customer Profile");
+                Console.WriteLine("   [x] Exit");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
@@ -72,15 +73,28 @@ namespace UI
             // What do I want to gather?
             // Name, obviously. 
             // Age? No. Money? I could. Username? Eh. 
-            Console.WriteLine("Creating new customer...");
+            Console.WriteLine("\nCreating new customer...");
+
             Console.Write("What is your name? ");
             string name = Console.ReadLine();
 
             List<Customer> allCustos = _bl.GetAllCustomers();
-            Console.WriteLine($"Thank you. Your unique ID is {allCustos.Count}");
-
             Customer newCusto = new Customer(name);
+
+            try 
+            {
+                newCusto.Name = name;
+            }
+            catch(InputInvalidException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine($"Thank you. Your ID to sign in is {allCustos.Count}.");
             _bl.AddCustomer(newCusto);
+
+            // wait for the user to continue. 
+            Console.Write("press enter to continue...");
+            Console.ReadLine();
         }
     }
 }

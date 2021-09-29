@@ -26,17 +26,18 @@ namespace UI
                 Console.WriteLine("\nManaging product...");
                 if (activeProduct == null) Console.WriteLine("No active product, please select a product first.");
                 else Console.WriteLine($"Current active product: {activeProduct.Name}"); // should display active product by name. 
-                Console.WriteLine("[0] Add Product");
-                Console.WriteLine("[1] Change Active Product");
-                Console.WriteLine("[2] Remove Product");
-                Console.WriteLine("[x] Exit");
+                Console.WriteLine("   [0] Add Product");
+                Console.WriteLine("   [1] Change Active Product");
+                Console.WriteLine("   [2] Remove Product");
+                Console.WriteLine("   [x] Return to manager menu");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
                 {
                     case "0": 
                         // Add Product
-                        Console.WriteLine("Adding a new product. What is the product's name?");
+                        Console.WriteLine("Adding a new product...");
+                        Console.Write("Product Name: ");
                         string name = Console.ReadLine();
                         
                         getPrice:
@@ -45,7 +46,7 @@ namespace UI
                         parseSuccess = int.TryParse(input, out parsedInput);
                         if (parseSuccess && parsedInput > 0)
                         {
-                            Console.WriteLine("\nDescribe the product.");
+                            Console.WriteLine("Describe the product.");
                             string description = Console.ReadLine();
                         
                             activeProduct = _bl.AddProduct(new Product(name, parsedInput, description));
@@ -60,7 +61,7 @@ namespace UI
 
                     case "1": 
                         // List Products
-                        Console.WriteLine("Searching for all products...");
+                        Console.WriteLine("\nSearching for all products...");
                         List<Product> allProducts = _bl.GetAllProducts();
                         if (allProducts.Count == 0)
                         {
@@ -69,9 +70,9 @@ namespace UI
                         }
                         for (int i = 0; i < allProducts.Count; i++) 
                         {
-                            Console.WriteLine($"[{i}] {allProducts[i].Name}");
+                            Console.WriteLine($"   [{i}] {allProducts[i].Name}");
                         }
-                        Console.WriteLine("Which product would you like to look at?");
+                        Console.Write("Which product would you like to look at? ");
                         input = Console.ReadLine();
 
                         parseSuccess = int.TryParse(input, out parsedInput);

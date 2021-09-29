@@ -23,18 +23,20 @@ namespace UI
                 Console.WriteLine("\nManaging stores...");
                 if (activeStore == null) Console.WriteLine("No active store, please select a store first.");
                 else Console.WriteLine($"Current active store: {activeStore.Name}"); // should display active store by name. 
-                Console.WriteLine("[0] Add Store");
-                Console.WriteLine("[1] Change Store");
-                Console.WriteLine("[2] See Inventory");
-                Console.WriteLine("[3] Add Inventory");
-                Console.WriteLine("[x] Exit");
+                Console.WriteLine("   [0] Add Store");
+                Console.WriteLine("   [1] Change Store");
+                Console.WriteLine("   [2] See Inventory");
+                Console.WriteLine("   [3] Add Inventory");
+                Console.WriteLine("   [4] View Order History");
+                Console.WriteLine("   [x] Return to manager menu");
                 Console.Write("Input: ");
 
                 switch (Console.ReadLine())
                 {
                     case "0": 
                         // Add Store
-                        Console.WriteLine("Adding a new store. What is the store's name?");
+                        Console.WriteLine("\nAdding a new store...");
+                        Console.Write("New Store Name: ");
                         string name = Console.ReadLine();
                         activeStore = _bl.AddStoreFront(new StoreFront(name));
                         Console.WriteLine("Setting current active store to new store.");
@@ -42,7 +44,7 @@ namespace UI
 
                     case "1": 
                         // Change Store
-                        Console.WriteLine("Searching for all stores...");
+                        Console.WriteLine("\nSearching for all stores...");
 
                         activeStore = selectStore();
                         if (activeStore is null)
@@ -60,18 +62,21 @@ namespace UI
                         // See Inventory
                         if (activeStore is null)
                         {
-                            Console.WriteLine("Please select a store first.");
+                            Console.WriteLine("\nPlease select a store first.");
                             break;
                         }
 
                         SeeInventoryofStore(activeStore);
+                        // wait for the user to continue. 
+                        Console.Write("press enter to continue...");
+                        Console.ReadLine();
                         break; 
 
                     case "3": 
                         // Add Inventory
                         if (activeStore is null)
                         {
-                            Console.WriteLine("Please select a store first.");
+                            Console.WriteLine("\nPlease select a store first.");
                             break;
                         }
 
@@ -84,7 +89,7 @@ namespace UI
                         // 
                         List<Product> allProducts = _bl.GetAllProducts();
                         seeProducts(allProducts);
-                        Console.Write("Which product would you like to add? ");
+                        Console.Write("\nWhich product would you like to add? ");
 
                         entry = Console.ReadLine();
                         parsedInput = _bl.convertString(entry, 0, allProducts.Count+1);
@@ -111,21 +116,52 @@ namespace UI
                                 _bl.AddInventory(addedProduct);
                             }
                         }
-
-                        /*
-                        parseSuccess = int.TryParse(input, out parsedInput);
-                        if (parseSuccess && parsedInput >= 0 && parsedInput < allProducts.Count)
-                        {
-                            // add item to inventory for the selected store. 
-                            Inventory addedProduct = new Inventory(allProducts[parsedInput].Id, activeStore.Id, quantity);
-                            activeStore.Inventories.Add(allProducts[parsedInput]);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Returning to product manager menu.");
-                            break;
-                        } */
+                        
                         break; 
+
+                    case "4":
+                        // View Order History
+                        if (activeStore == null)
+                        {
+                            Console.WriteLine("\nPlease select a store first.");
+                            break;
+                        }
+
+                        List<Orders> storeOrders = _bl.storeOrders(activeStore.Id);
+                        List<Customer> allCustos = _bl.GetAllCustomers();
+                        List<Product> allProductsforThisPlace = _bl.GetAllProducts();
+
+                        if(storeOrders.Count == 0)
+                        {
+                            Console.WriteLine("This store has no history.");
+                            break;
+                        }
+
+                        // List of Line Items by Order
+                        List<List<LineItem>> storeLineItems = new List<List<LineItem>>();
+                        foreach (Orders item in storeOrders)
+                        {
+                            List<LineItem> LineItemsbyOrder = _bl.GetLineItembyOrderID(item.Id);
+                            storeLineItems.Add(LineItemsbyOrder);
+                        }
+
+                        for (int i = 0; i < storeOrders.Count; i++)
+                        {
+                            Console.WriteLine($"On {storeOrders[i].Date.ToString("g")}, {allCustos[storeOrders[i].CustomerId].Name} paid {storeOrders[i].Total} gold coins for:");
+                            foreach (LineItem lineitem in storeLineItems[i])
+                            {
+                                Console.WriteLine($" * {allProductsforThisPlace[lineitem.ProductId].Name} x{lineitem.Quantity}");
+                            }
+                            // can insert a readline command to wait for user input. 
+                            // can have it show up every five orders, so the user isn't flooded. 
+                            // can have it read the input and, if x, doesn't stop anymore. 
+                        }
+                        
+                        // wait for the user to continue. 
+                        Console.Write("press enter to continue...");
+                        Console.ReadLine();
+
+                        break;
                         
                     case "x": 
                         exit = true;
@@ -144,7 +180,7 @@ namespace UI
             selectStore:
             for (int i = 0; i < allRestos.Count; i++) 
             {
-                Console.WriteLine($"[{i}] {allRestos[i].Name}");
+                Console.WriteLine($"   [{i}] {allRestos[i].Name}");
             }
             Console.Write("Which store would you like to switch to? ");
             string input = Console.ReadLine();
@@ -168,7 +204,7 @@ namespace UI
             string currentProduct;
             for (int i = 0; i < allProducts.Count; i++)
             {
-                currentProduct = $"[{i}] {allProducts[i].Name}";
+                currentProduct = $"   [{i}] {allProducts[i].Name}";
                 currentProduct = currentProduct + $" ({allProducts[i].Price})";
                 currentProduct = currentProduct + $": {allProducts[i].Description}";
                 Console.WriteLine(currentProduct);
@@ -187,7 +223,7 @@ namespace UI
 
             for (int i = 0; i < storeInventory.Count; i++)
             {
-                Console.WriteLine($"[{i}] {storeInventory[i]}");
+                Console.WriteLine($"   [{i}] {storeInventory[i]}");
             }
         }
         
