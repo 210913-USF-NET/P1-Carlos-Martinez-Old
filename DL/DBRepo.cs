@@ -42,7 +42,9 @@ namespace DL
         {
             /// <summary>
             /// Returns every customer available to the system. 
+            /// Other models (GetCustomer) can be used to get other information. 
             /// </summary>
+            /// <returns>list of customers with just name and ID</returns>
             
             return _context.Customers.Select(
                 customer => new Model.Customer()
@@ -58,6 +60,12 @@ namespace DL
         }
         public Model.Customer UpdateCustomer(Model.Customer customerToUpdate)
         {
+            /// <summary>
+            /// Gets a customer object and replaces the DB's customer of the same ID
+            /// with the new customer object. 
+            /// </summary>
+            /// <param name="c.Id">c.Id is the ID of the customer being updated</param>
+            /// <returns>the updated customer</returns>
             Entities.Customer updatedCust = (from c in _context.Customers
                                              where c.Id == customerToUpdate.Id
                                              select c).SingleOrDefault();
@@ -68,24 +76,14 @@ namespace DL
 
             _context.SaveChanges();
 
-            // string queryString = $"UPDATE Customer SET Name = @name, Credit = @money, StoreFrontId = @sfID, hasDefaultStore = @hDS WHERE Id = @cID;";
-            // using (SqlConnection connection = new SqlConnection(connectionString))
-            // {
-            //     connection.Open();
-            //     SqlCommand command = new SqlCommand(queryString, connection);
-            //     command.Parameters.AddWithValue("@name", customerToUpdate.Name);
-            //     command.Parameters.AddWithValue("@money", customerToUpdate.Credit);
-            //     command.Parameters.AddWithValue("@sfID", customerToUpdate.StoreFrontID);
-            //     command.Parameters.AddWithValue("@hDS", customerToUpdate.hasDefaultStore);
-            //     command.Parameters.AddWithValue("@cID", customerToUpdate.Id);
-            //     command.ExecuteNonQuery();
-            // }
-
             return customerToUpdate;
         }
         public Model.Customer GetCustomer(int ID)
         {
-            // Can I just call the get all customers method?
+            /// <summary>
+            /// Gets a specific customer, as references by ID. 
+            /// </summary>
+            /// <returns>returns the customer with the ID you want, or null if none found.</returns>
             List<Model.Customer> allCustos = _context.Customers.Select(
                 customer => new Model.Customer()
                 {
@@ -112,6 +110,10 @@ namespace DL
         // [PRODUCTS]
         public Model.Product AddProduct(Model.Product product)
         {
+            /// <summary>
+            /// Adds a product and saves it to the DB. 
+            /// </summary>
+            /// <returns>returns the product added.</returns>
             Entity.Product prodToAdd = new Entity.Product()
             {
                 Name = product.Name,
@@ -127,6 +129,10 @@ namespace DL
         }
         public List<Model.Product> GetAllProducts()
         {
+            /// <summary>
+            /// Gets all the products from the DB. 
+            /// </summary>
+            /// <returns>returns a list of all products</returns>
             return _context.Products.Select(
                 product => new Model.Product()
                 {
@@ -140,6 +146,10 @@ namespace DL
         // [[STOREFRONTS]]
         public Model.StoreFront AddStoreFront(Model.StoreFront store)
         {
+            /// <summary>
+            /// Adds a storefront and saves it to the DB
+            /// </summary>
+            /// <returns>the new storefront</returns>
             Entity.StoreFront storeToAdd = new Entity.StoreFront()
             {
                 Name = store.Name,
@@ -154,15 +164,15 @@ namespace DL
         }
         public Model.StoreFront GetStoreFront(int ID)
         {
+            /// <summary>
+            /// Gets a specific storefront. 
+            /// </summary>
+            /// <returns>Returns the storefront which matches the ID provided</returns>
             List<Model.StoreFront> allStores = _context.StoreFronts.Select(
                 store => new Model.StoreFront()
                 {
                     Id = store.Id,
-                    Name = store.Name,
-                    // Orders = customer.Orders,
-                    // Inventory = customer.Inventory,
-                    // Credit = customer.Credit,
-                    // DefaultStore = customer.DefaultStore
+                    Name = store.Name
                 }
             ).ToList();
 
@@ -177,6 +187,9 @@ namespace DL
         }
         public List<Model.StoreFront> GetAllStoreFronts()
         {
+            /// <summary>
+            /// Returns all the storefronts. 
+            /// </summary>
             return _context.StoreFronts.Select(
                 store => new Model.StoreFront()
                 {
@@ -189,6 +202,9 @@ namespace DL
         // [[INVENTORY]]
         public Model.Inventory AddInventory(Model.Inventory inventory)
         {
+            /// <summary>
+            /// Adds inventory to the DB. 
+            /// </summary>
             Entity.Inventory invToAdd = new Entity.Inventory()
             {
                 StoreId = inventory.StoreFrontId,
@@ -232,9 +248,12 @@ namespace DL
         }
         public List<Model.Inventory> GetInventory(int store)
         {
-            // grab all the Inventories
-            // cycle through them until I find the store ID
-
+            /// <summary>
+            /// Get all inventories, get all products,
+            /// returns a new inventory list of the inventories
+            /// that are within the store ID provided
+            /// </summary>
+            /// <returns>a full list of the store inventory</returns>
             List<Model.Inventory> allInventories = _context.Inventories.Select(
                 inventory => new Model.Inventory()
                 {
@@ -279,6 +298,11 @@ namespace DL
         }
         public List<Model.Inventory> UpdateInventory(List<Model.Inventory> inventoryToUpdate)
         {
+            /// <summary>
+            /// Replaces the inventory in the DB with the updated
+            /// inventory provided. 
+            /// </summary>
+
             foreach (Model.Inventory item in inventoryToUpdate)
             {
                 Entities.Inventory updatedInventory = (from i in _context.Inventories
@@ -296,6 +320,9 @@ namespace DL
         // [[ORDERS]]
         public List<Model.Orders> GetAllOrders()
         {
+            /// <summary>
+            /// Returns all the orders. 
+            /// </summary>
             return _context.Orders.Select(
                 order => new Model.Orders()
                 {
@@ -309,6 +336,9 @@ namespace DL
         }
         public Model.Orders AddOrder(Model.Orders order)
         {
+            /// <summary>
+            /// Adds an Order to the DB. 
+            /// </summary>
             Entity.Order orderToAdd = new Entity.Order()
             {
                 CustomerId = order.CustomerId,
@@ -325,6 +355,9 @@ namespace DL
         }
         public List<Model.Orders> getOrderHistory(int custoId)
         {
+            /// <summary>
+            /// Gets all the orders which have a specific CustomerID
+            /// </summary>
             List<Model.Orders> allOrders = GetAllOrders();
             List<Model.Orders> custoOrders = new List<Model.Orders>();
             
@@ -342,6 +375,9 @@ namespace DL
         // [[LINE ITEMS]]
         public List<Model.LineItem> AddLineItem(List<Model.LineItem> lineitemList)
         {
+            /// <summary>
+            /// Adds each item in a list of line items to the DB. 
+            /// </summary>
             List<Entity.LineItem> linesToAdd = new List<Entity.LineItem>();
             
             foreach (Model.LineItem lineitem in lineitemList)
@@ -353,19 +389,7 @@ namespace DL
                     Quantity = lineitem.Quantity
                 };
 
-                // Entity.LineItem lineitemToAdd = lineitem.Select(i => new Entity.LineItem()
-                // {
-                //     Id = i.Id,
-                //     OrderId = i.OrderId,
-                //     ProductId = i.ProductId,
-                //     Quantity = i.Quantity
-                // }).ToList();
-
                 linesToAdd.Add(lineitemToAdd);
-
-                // _context.Add(lineitemToAdd);
-                // _context.SaveChanges();
-                // _context.ChangeTracker.Clear();
             }
 
             _context.LineItems.AddRange(linesToAdd);
@@ -375,6 +399,9 @@ namespace DL
         }
         public List<Model.LineItem> GetLineItembyOrderID(int ID)
         {
+            /// <summary>
+            /// Gets all the line items with a specified OrderId and returns a list of them. 
+            /// </summary>
             return _context.LineItems.Where(i => i.OrderId == ID).Select(
                 lineitem => new Model.LineItem()
                 {
