@@ -17,7 +17,7 @@ namespace UI
         
         public void Start()
         {
-            Console.WriteLine("\nEnter your unique ID: ");
+            Console.Write("\nEnter your unique ID: ");
             int input = _bl.convertString(Console.ReadLine(), 0);
             if (input == -1)
             {
@@ -62,7 +62,7 @@ namespace UI
             bool exit = false;
             do
             {
-                Console.WriteLine($"\nWelcome to {activeStore.Name}!");
+                Console.WriteLine($"\nWelcome to {activeStore.Name}, {custo.Name}!");
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("   [0] Add Product to Shopping Cart");
                 Console.WriteLine("   [1] Change Store");

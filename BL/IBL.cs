@@ -28,14 +28,14 @@ namespace BL
         List<Orders> GetAllOrders();
         Orders AddOrder(Orders order);
         List<Orders> getOrderHistory(int custoId);
-        List<Orders> storeOrders(int storeOrderId);
+        List<Orders> orderList(int activeCustomerId, string choice);
+        List<Orders> storeOrders(int storeOrderId, string choice);
 
         // Line Items
         List<LineItem> AddLineItem(List<LineItem> lineitem);
         List<LineItem> GetLineItembyOrderID(int ID);
 
         // Special
-        List<Orders> orderList(int activeCustomerId, string choice);
         int convertString(string entry, int min, int max);
         int convertString(string entry, int min);
     }

@@ -110,7 +110,7 @@ namespace BL
             return custoOrders;
         }
 
-        public List<Orders> storeOrders(int storeOrderId)
+        public List<Orders> storeOrders(int storeOrderId, string choice)
         {
             List<Orders> allOrders = _repo.GetAllOrders();
             List<Orders> storeOrders = new List<Orders>();
@@ -122,6 +122,18 @@ namespace BL
                     storeOrders.Add(item);
                 }
             }
+            orderComparer comparer = new orderComparer();
+
+            // DA is DATE ASCENDING, DD is DATE DESCENDING
+            // TA is TOTAL ASCENDING, TD is TOTAL DESCENDING
+            if (choice.Equals("DA"))
+                storeOrders.Sort(comparer.ComparebyAscDate);
+            else if (choice.Equals("TA"))
+                storeOrders.Sort(comparer.ComparebyAscTotal);
+            if (choice.Equals("DD"))
+                storeOrders.Sort(comparer.ComparebyDesDate);
+            else if (choice.Equals("TD"))
+                storeOrders.Sort(comparer.ComparebyDesTotal);
 
             return storeOrders;
         }

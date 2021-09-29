@@ -126,8 +126,46 @@ namespace UI
                             Console.WriteLine("\nPlease select a store first.");
                             break;
                         }
+                        string choice = "";
 
-                        List<Orders> storeOrders = _bl.storeOrders(activeStore.Id);
+                        chooseOrder:
+                        Console.Write("\nWould you like the orders by [D]ate or [T]otal? ");
+                        switch(Char.ToUpper(Console.ReadLine()[0]))
+                        {
+                            case 'D':
+                                // they want it by DATE
+                                choice = choice + "D";
+                                break; 
+                            case 'T': 
+                                // they want it by TOTAL
+                                choice = choice + "T";
+                                break; 
+                            default: 
+                                // they fucked up!
+                                Console.WriteLine("Please input a proper response.");
+                                goto chooseOrder;
+                        }
+
+                        AscOrDes: 
+                        Console.Write("Would you like the orders in [A]scending or [D]escending order? ");
+                        switch(Char.ToUpper(Console.ReadLine()[0]))
+                        {
+                            case 'A':
+                                // they want it by ASCENDING
+                                choice = choice + "A";
+                                break; 
+                            case 'D': 
+                                // they want it by DESCENDING
+                                choice = choice + "D";
+                                break; 
+                            default: 
+                                // they fucked up!
+                                Console.WriteLine("Please input a proper response.");
+                                goto AscOrDes;
+                        }
+                        Console.WriteLine();
+                        
+                        List<Orders> storeOrders = _bl.storeOrders(activeStore.Id, choice);
                         List<Customer> allCustos = _bl.GetAllCustomers();
                         List<Product> allProductsforThisPlace = _bl.GetAllProducts();
 
