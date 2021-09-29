@@ -179,7 +179,7 @@ namespace UI
                         break; 
                         
                     case "3": 
-                        SearchCustomerbyName();
+                        activeCustomer = SearchCustomerbyName();
                         break;
                         
                     case "x": 
