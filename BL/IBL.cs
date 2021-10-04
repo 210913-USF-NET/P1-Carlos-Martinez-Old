@@ -7,7 +7,10 @@ namespace BL
     {
         // Stores [Add Store, Get Stores]
         StoreFront AddStoreFront(StoreFront store);
+        StoreFront GetStoreFront(int Id);
         List<StoreFront> GetAllStoreFronts();
+        StoreFront UpdateStore(StoreFront store);
+        void RemoveStore(int Id);
 
         // Products [Add Product, Get Products]
         Product AddProduct(Product product);
@@ -18,6 +21,7 @@ namespace BL
         List<Customer> GetAllCustomers();
         Customer GetCustomer(int ID);
         Customer UpdateCustomer(Customer cust);
+        void RemoveCustomer(int Id);
 
         // Inventories
         List<Inventory> GetInventory(int store);

@@ -10,6 +10,8 @@ namespace DL
         StoreFront AddStoreFront(StoreFront store);
         List<StoreFront> GetAllStoreFronts();
         StoreFront GetStoreFront(int ID);
+        StoreFront UpdateStore(StoreFront store);
+        void RemoveStore(int ID);
 
         // Products [Add Product, Get Products]
         Product AddProduct(Product product);
@@ -18,8 +20,9 @@ namespace DL
         // Customers [Add Customer, Get All Customers, Get Specific Customer, Update Customer]
         Customer AddCustomer(Customer cust);
         List<Customer> GetAllCustomers();
-        Customer GetCustomer(int name);
+        Customer GetCustomer(int Id);
         Customer UpdateCustomer(Customer cust);
+        void RemoveCustomer(int Id);
 
         // Inventory
         Inventory AddInventory(Inventory inventory);

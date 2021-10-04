@@ -14,7 +14,7 @@ namespace UI
 
         public void Start()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             bool exit = false;
             do
             {

@@ -49,5 +49,24 @@ namespace Models
         {
             return $"Id: {this.Id}, Name: {this.Name}, Credit: {this.Credit}, StoreFrontID: {this.StoreFrontID}, hasDefaultStore: {this.hasDefaultStore}";
         }
+
+        public Customer ToModel()
+        {
+            Customer newCusto;
+            try
+            {
+                newCusto = new Customer
+                {
+                    Id = this.Id,
+                    Name = this.Name ?? "",
+                    Credit = this.Credit
+                };
+            }
+            catch
+            {
+                throw;
+            }
+            return newCusto;
+        }
     }
 }

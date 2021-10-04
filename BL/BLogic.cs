@@ -19,13 +19,22 @@ namespace BL
         {
             return _repo.AddStoreFront(store);
         }
-
         public List<StoreFront> GetAllStoreFronts()
         {
             return _repo.GetAllStoreFronts();
         }
-
-        
+        public StoreFront GetStoreFront(int Id)
+        {
+            return _repo.GetStoreFront(Id);
+        }
+        public StoreFront UpdateStore(StoreFront store)
+        {
+            return _repo.UpdateStore(store);
+        }
+        public void RemoveStore(int ID)
+        {
+            _repo.RemoveStore(ID);
+        }
         // Products [Add Product, Get Products]
         public Product AddProduct(Product product)
         {
@@ -53,6 +62,10 @@ namespace BL
         public Customer UpdateCustomer(Customer cust)
         {
             return _repo.UpdateCustomer(cust);
+        }
+        public void RemoveCustomer(int Id)
+        {
+            _repo.RemoveCustomer(Id);
         }
         public Inventory AddInventory(Inventory inventory)
         {

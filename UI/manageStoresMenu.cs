@@ -92,7 +92,7 @@ namespace UI
                         Console.Write("\nWhich product would you like to add? ");
 
                         entry = Console.ReadLine();
-                        parsedInput = _bl.convertString(entry, 0, allProducts.Count+1);
+                        parsedInput = _bl.convertString(entry, 0, allProducts.Count-1);
 
                         if (parsedInput == -1)
                         {
