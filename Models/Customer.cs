@@ -20,7 +20,7 @@ namespace Models
         // properties
         public int Id { get; set; }
         private string _name;
-        public string Name 
+        public string Name
         { 
             get
             {
@@ -41,6 +41,7 @@ namespace Models
                 }
             }
         }
+        public string Password { get; set; }
         public int Credit { get; set; }
         public int StoreFrontID { get; set; }
         public int hasDefaultStore { get; set; }
@@ -59,7 +60,8 @@ namespace Models
                 {
                     Id = this.Id,
                     Name = this.Name ?? "",
-                    Credit = this.Credit
+                    Credit = this.Credit,
+                    Password = this.Password
                 };
             }
             catch

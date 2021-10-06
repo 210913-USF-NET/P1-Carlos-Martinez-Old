@@ -3,6 +3,27 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the Emporium!</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SignIn">
+            <div class="form-group">
+                <label class="control-label">Username</label>
+                <input name="username" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Password</label>
+                <input name="password" type="password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sign In" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="NewCustomer">New Customer?</a>
 </div>

@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Models;
 using WebUI.Models;
+using Serilog;
 
 namespace WebUI.Controllers
 {
@@ -44,6 +44,16 @@ namespace WebUI.Controllers
                 // if data is valid
                 if (ModelState.IsValid)
                 {
+                    if (customer.Name.Length == 1)
+                    {
+                        customer.Name = customer.Name.ToUpper();
+                    }
+                    else
+                    {
+                        customer.Name = customer.Name[0].ToString().ToUpper() + customer.Name.Substring(1).ToLower();
+                    }
+
+                    customer.Password = _bl.Hash(customer.Password);
                     _bl.AddCustomer(customer.ToModel());
                     return RedirectToAction(nameof(Index));
                 }
@@ -51,6 +61,7 @@ namespace WebUI.Controllers
             }
             catch (Exception e)
             {
+                Log.Warning("Creating customer failed.");
                 return View();
             }
         }

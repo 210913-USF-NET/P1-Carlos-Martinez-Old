@@ -42,5 +42,9 @@ namespace BL
         // Special
         int convertString(string entry, int min, int max);
         int convertString(string entry, int min);
+
+        // Password
+        public string Hash(string password);
+        public bool Verify(string password, string hash);
     }
 }

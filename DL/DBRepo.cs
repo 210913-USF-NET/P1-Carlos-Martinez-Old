@@ -23,6 +23,7 @@ namespace DL
             /// <summary>
             /// Adds a new customer to the Database, then saves the Database. 
             /// </summary>
+            custo.Credit = 30;
             custo = _context.Add(custo).Entity;
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
@@ -41,10 +42,8 @@ namespace DL
                 {
                     Id = customer.Id,
                     Name = customer.Name,
-                    // Orders = customer.Orders,
-                    // Inventory = customer.Inventory,
-                    // Credit = customer.Credit,
-                    // DefaultStore = customer.DefaultStore
+                    Credit = customer.Credit,
+                    Password = customer.Password
                 }
             ).ToList();
         }

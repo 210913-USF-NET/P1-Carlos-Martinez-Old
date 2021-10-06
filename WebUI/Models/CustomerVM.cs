@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Models;
 
 namespace WebUI.Models
@@ -16,12 +12,21 @@ namespace WebUI.Models
             this.Id = custo.Id;
             this.Name = custo.Name;
             this.Credit = custo.Credit;
+            this.Password = custo.Password;
         }
 
         public int Id { get; set; }
         [Required]
+        [Display(Name="Username")]
         public string Name { get; set; }
         public int Credit { get; set; }
+        [Required]
+        public string Password { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {this.Id}, Name: {this.Name}, Credit: {this.Credit}";
+        }
 
         public Customer ToModel()
         {
@@ -32,6 +37,7 @@ namespace WebUI.Models
                 {
                     Id = this.Id,
                     Name = this.Name ?? "",
+                    Password = this.Password,
                     Credit = this.Credit
                 };
             }
