@@ -21,11 +21,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release --output ./Publish
+      run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish --no-build
+      run: dotnet publish --no-build --configuration Release --output ./Publish
 
     - name: Azure WebApp
       uses: Azure/webapps-deploy@v2
