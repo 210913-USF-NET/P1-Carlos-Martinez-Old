@@ -1,46 +1,57 @@
-name: .NET
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - restaurantreviewsdemo
 
 on:
   push:
-    branches: 
+    branches:
       - main
-  pull_request:
-    branches: [ main ]  
+  workflow_dispatch:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-    #- name: Test
-    #  run: dotnet test --no-build --verbosity normal
-    - name: Publish
-      run: dotnet publish --no-build --configuration Release --output ./Publish
+      - uses: actions/checkout@v2
 
-    - name: Azure WebApp
-      uses: Azure/webapps-deploy@v2
-      with:
-        # Name of the Azure Web App
-        app-name: PopStore
-        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
-        publish-profile: ${{ secrets.PUBLISHSETTINGS }}
-        # Enter an existing Slot other than the Production slot
-        #slot-name: # optional, default is production
-        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        package: ./Publish
-        # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
-        #images: 
-        # Applies to Web App Containers only: Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory. Required for multi-container scenario
-        #configuration-file: # optional
-        # Enter the start up command. For ex. dotnet run or dotnet run
-        #startup-command: # optional
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+          include-prerelease: true
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ./Publish
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ./Publish
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'restaurantreviewsdemo'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.PUBLISHSETTINGS }}
+          package: .
