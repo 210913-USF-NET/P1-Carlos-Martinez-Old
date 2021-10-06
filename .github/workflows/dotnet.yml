@@ -7,6 +7,11 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  AZURE_WEBAPP_PUBLISH_PROFILE:
+  AZURE_WEBAPP_PACKAGE_PATH:
+  
+
 jobs:
   build:
 
@@ -25,7 +30,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish ${{ env.DOTNET_ROOT }} --no-build --configuration Release --output ${{ env.DOTNET_ROOT}}/Publish
+      run: dotnet publish --no-build --configuration Release --output ./Publish
 
     - name: Azure WebApp
       uses: Azure/webapps-deploy@v2
@@ -37,7 +42,7 @@ jobs:
         # Enter an existing Slot other than the Production slot
         #slot-name: # optional, default is production
         # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        package: ${{ env.DOTNET_ROOT }}/Publish
+        package: ./Publish
         # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
         #images: 
         # Applies to Web App Containers only: Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory. Required for multi-container scenario
