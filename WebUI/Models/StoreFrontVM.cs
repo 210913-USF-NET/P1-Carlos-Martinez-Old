@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Models;
 
 namespace WebUI.Models
@@ -24,6 +21,7 @@ namespace WebUI.Models
 
         // properties
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
 
         public override string ToString()
